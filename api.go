@@ -6,7 +6,9 @@ type RPCConnectionConfig interface{}
 
 type ActiveNet interface{}
 
-type Address interface{}
+type Address interface{
+	String() string
+}
 
 type Seed interface{}
 
