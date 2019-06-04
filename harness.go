@@ -8,9 +8,6 @@ package cointest
 import (
 	"fmt"
 	"os"
-
-	"github.com/decred/dcrd/dcrutil"
-	"github.com/decred/dcrd/rpcclient"
 )
 
 // Harness provides a unified platform for creating RPC-driven
@@ -25,12 +22,12 @@ type Harness struct {
 
 	WorkingDir string
 
-	MiningAddress dcrutil.Address
+	MiningAddress Address
 }
 
 // NodeRPCClient manages access to the RPCClient,
-// test cases suppose to use it when the need access to the Dcrd RPC
-func (harness *Harness) NodeRPCClient() *rpcclient.Client {
+// test cases suppose to use it when the need access to the node RPC
+func (harness *Harness) NodeRPCClient() RPCClient {
 	return harness.Node.RPCClient().rpcClient
 }
 

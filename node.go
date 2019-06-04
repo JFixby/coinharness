@@ -5,16 +5,6 @@
 
 package cointest
 
-type Network interface {
-}
-
-type RPCConnectionConfig interface {
-}
-
-type ActiveNet interface {
-}
-
-type Address interface{}
 
 // TestNode wraps optional test node implementations for different test setups
 type TestNode interface {

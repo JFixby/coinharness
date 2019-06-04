@@ -5,21 +5,13 @@
 
 package cointest
 
-import (
-	"github.com/decred/dcrd/chaincfg"
-	"github.com/decred/dcrd/chaincfg/chainhash"
-	"github.com/decred/dcrd/dcrutil"
-	"github.com/decred/dcrd/rpcclient"
-	"github.com/decred/dcrd/wire"
-)
-
 // TestWallet wraps optional test wallet implementations for different test setups
 type TestWallet interface {
 	// Network returns current network of the wallet
-	Network() *chaincfg.Params
+	Network() Network
 
 	// NewAddress returns a fresh address spendable by the wallet.
-	NewAddress(args *NewAddressArgs) (dcrutil.Address, error)
+	NewAddress(args *NewAddressArgs) (Address, error)
 
 	// Start wallet process
 	Start(args *TestWalletStartArgs) error
@@ -36,22 +28,22 @@ type TestWallet interface {
 	Sync()
 
 	// ConfirmedBalance returns wallet balance
-	ConfirmedBalance() dcrutil.Amount
+	ConfirmedBalance() CoinsAmount
 
 	// CreateTransaction returns a fully signed transaction paying to the specified
 	// outputs while observing the desired fee rate. The passed fee rate should be
 	// expressed in satoshis-per-byte. The transaction being created can optionally
 	// include a change output indicated by the Change boolean.
-	CreateTransaction(args *CreateTransactionArgs) (*wire.MsgTx, error)
+	CreateTransaction(args *CreateTransactionArgs) (CreatedTransactionTx, error)
 
 	// SendOutputs creates, then sends a transaction paying to the specified output
 	// while observing the passed fee rate. The passed fee rate should be expressed
 	// in satoshis-per-byte.
-	SendOutputs(outputs []*wire.TxOut, feeRate dcrutil.Amount) (*chainhash.Hash, error)
+	SendOutputs(args SendOutputsArgs) (SentOutputsHash, error)
 
 	// UnlockOutputs unlocks any outputs which were previously locked due to
 	// being selected to fund a transaction via the CreateTransaction method.
-	UnlockOutputs(inputs []*wire.TxIn)
+	UnlockOutputs(inputs []InputTx)
 }
 
 // TestWalletFactory produces a new TestWallet instance
@@ -62,17 +54,22 @@ type TestWalletFactory interface {
 
 // TestWalletConfig bundles settings required to create a new wallet instance
 type TestWalletConfig struct {
-	Seed          [chainhash.HashSize + 4]byte
+	Seed          Seed //[]byte // chainhash.HashSize + 4
 	WalletRPCHost string
 	WalletRPCPort int
-	ActiveNet     *chaincfg.Params
+	ActiveNet     ActiveNet
+}
+
+type SendOutputsArgs struct {
+	Outputs []OutputTx
+	FeeRate CoinsAmount
 }
 
 // CreateTransactionArgs bundles CreateTransaction() arguments to minimize diff
 // in case a new argument for the function is added
 type CreateTransactionArgs struct {
-	Outputs []*wire.TxOut
-	FeeRate dcrutil.Amount
+	Outputs []OutputTx
+	FeeRate CoinsAmount
 }
 
 // NewAddressArgs bundles NewAddress() arguments to minimize diff
@@ -88,5 +85,5 @@ type TestWalletStartArgs struct {
 	WalletExtraArguments     map[string]interface{}
 	DebugWalletOutput        bool
 	MaxSecondsToWaitOnLaunch int
-	NodeRPCConfig            *rpcclient.ConnConfig
+	NodeRPCConfig            RPCConnectionConfig
 }

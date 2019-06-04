@@ -10,24 +10,36 @@ import (
 	"github.com/jfixby/pin"
 	"math"
 	"time"
-
-	"github.com/decred/dcrd/rpcclient"
 )
+
+type RPCClientFactory interface {
+	NewRPCConnection(config RPCConnectionConfig, handlers RPCClientNotificationHandlers) (RPCClient, error)
+}
+
+type RPCClient interface {
+	NotifyBlocks() error
+	Disconnect()
+	Shutdown()
+}
+
+type RPCClientNotificationHandlers interface {
+}
 
 // RPCConnection is a helper class wrapping rpcclient.Client for test calls
 type RPCConnection struct {
-	rpcClient      *rpcclient.Client
-	MaxConnRetries int
-	isConnected    bool
+	rpcClient        RPCClient
+	MaxConnRetries   int
+	isConnected      bool
+	RPCClientFactory RPCClientFactory
 }
 
 // NewRPCConnection produces new instance of the RPCConnection
-func NewRPCConnection(config *rpcclient.ConnConfig, maxConnRetries int, ntfnHandlers *rpcclient.NotificationHandlers) *rpcclient.Client {
-	var client *rpcclient.Client
+func NewRPCConnection(fact RPCClientFactory, config RPCConnectionConfig, maxConnRetries int, ntfnHandlers RPCClientNotificationHandlers) RPCClient {
+	var client RPCClient
 	var err error
 
 	for i := 0; i < maxConnRetries; i++ {
-		client, err = rpcclient.New(config, ntfnHandlers)
+		client, err = fact.NewRPCConnection(config, ntfnHandlers)
 		if err != nil {
 			fmt.Println("err: " + err.Error())
 			time.Sleep(time.Duration(math.Log(float64(i+3))) * 50 * time.Millisecond)
@@ -42,12 +54,12 @@ func NewRPCConnection(config *rpcclient.ConnConfig, maxConnRetries int, ntfnHand
 }
 
 // Connect switches RPCConnection into connected state establishing RPCConnection to the rpcConf target
-func (client *RPCConnection) Connect(rpcConf *rpcclient.ConnConfig, ntfnHandlers *rpcclient.NotificationHandlers) {
+func (client *RPCConnection) Connect(rpcConf RPCConnectionConfig, ntfnHandlers RPCClientNotificationHandlers) {
 	if client.isConnected {
 		pin.ReportTestSetupMalfunction(fmt.Errorf("%v is already connected", client.rpcClient))
 	}
 	client.isConnected = true
-	rpcClient := NewRPCConnection(rpcConf, client.MaxConnRetries, ntfnHandlers)
+	rpcClient := NewRPCConnection(client.RPCClientFactory, rpcConf, client.MaxConnRetries, ntfnHandlers)
 	err := rpcClient.NotifyBlocks()
 	pin.CheckTestSetupMalfunction(err)
 	client.rpcClient = rpcClient
@@ -69,6 +81,6 @@ func (client *RPCConnection) IsConnected() bool {
 }
 
 // Connection returns rpcclient.Client for API calls
-func (client *RPCConnection) Connection() *rpcclient.Client {
+func (client *RPCConnection) Connection() RPCClient {
 	return client.rpcClient
 }
