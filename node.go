@@ -5,16 +5,21 @@
 
 package cointest
 
-import (
-	"github.com/decred/dcrd/chaincfg"
-	"github.com/decred/dcrd/dcrutil"
-	"github.com/decred/dcrd/rpcclient"
-)
+type Network interface {
+}
+
+type RPCConnectionConfig interface {
+}
+
+type ActiveNet interface {
+}
+
+type Address interface{}
 
 // TestNode wraps optional test node implementations for different test setups
 type TestNode interface {
 	// Network returns current network of the node
-	Network() *chaincfg.Params
+	Network() Network
 
 	// Start node process
 	Start(args *TestNodeStartArgs)
@@ -30,7 +35,7 @@ type TestNode interface {
 	CertFile() string
 
 	// RPCConnectionConfig produces a new connection config instance for RPC client
-	RPCConnectionConfig() *rpcclient.ConnConfig
+	RPCConnectionConfig() RPCConnectionConfig
 
 	// RPCClient returns node RPCConnection
 	RPCClient() *RPCConnection
@@ -47,7 +52,7 @@ type TestNodeFactory interface {
 
 // TestNodeConfig bundles settings required to create a new node instance
 type TestNodeConfig struct {
-	ActiveNet *chaincfg.Params
+	ActiveNet ActiveNet
 
 	WorkingDir string
 
@@ -63,5 +68,5 @@ type TestNodeConfig struct {
 type TestNodeStartArgs struct {
 	ExtraArguments map[string]interface{}
 	DebugOutput    bool
-	MiningAddress  dcrutil.Address
+	MiningAddress  Address
 }
