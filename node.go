@@ -5,7 +5,6 @@
 
 package cointest
 
-
 // TestNode wraps optional test node implementations for different test setups
 type TestNode interface {
 	// Network returns current network of the node
@@ -33,8 +32,9 @@ type TestNode interface {
 	// P2PAddress returns node p2p address
 	P2PAddress() string
 
-
-
+	SetDebugNodeOutput(b bool)
+	SetMiningAddress(address Address)
+	SetExtraArguments(NodeExtraArguments map[string]interface{})
 }
 
 // TestNodeFactory produces a new TestNode instance
