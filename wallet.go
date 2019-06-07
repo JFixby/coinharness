@@ -5,8 +5,8 @@
 
 package coinharness
 
-// TestWallet wraps optional test wallet implementations for different test setups
-type TestWallet interface {
+// Wallet wraps optional test wallet implementations for different test setups
+type Wallet interface {
 	// Network returns current network of the wallet
 	Network() Network
 
@@ -46,10 +46,10 @@ type TestWallet interface {
 	UnlockOutputs(inputs []InputTx)
 }
 
-// TestWalletFactory produces a new TestWallet instance
+// TestWalletFactory produces a new Wallet instance
 type TestWalletFactory interface {
 	// NewWallet is used by harness builder to setup a wallet component
-	NewWallet(cfg *TestWalletConfig) TestWallet
+	NewWallet(cfg *TestWalletConfig) Wallet
 }
 
 // TestWalletConfig bundles settings required to create a new wallet instance

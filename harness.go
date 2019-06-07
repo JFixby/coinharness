@@ -12,13 +12,13 @@ import (
 
 // Harness provides a unified platform for creating RPC-driven
 // integration tests involving node and wallet executables.
-// The active TestNodeServer and TestWallet will typically be
+// The active TestNodeServer and Wallet will typically be
 // run in regression net mode to allow for easy generation of test blockchains.
 type Harness struct {
 	Name string
 
-	Node   TestNode
-	Wallet TestWallet
+	Node   Node
+	Wallet Wallet
 
 	WorkingDir string
 

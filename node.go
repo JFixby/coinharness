@@ -5,8 +5,8 @@
 
 package coinharness
 
-// TestNode wraps optional test node implementations for different test setups
-type TestNode interface {
+// Node wraps optional test node implementations for different test setups
+type Node interface {
 	// Network returns current network of the node
 	Network() Network
 
@@ -37,10 +37,10 @@ type TestNode interface {
 	SetExtraArguments(NodeExtraArguments map[string]interface{})
 }
 
-// TestNodeFactory produces a new TestNode instance
+// TestNodeFactory produces a new Node instance
 type TestNodeFactory interface {
 	// NewNode is used by harness builder to setup a node component
-	NewNode(cfg *TestNodeConfig) TestNode
+	NewNode(cfg *TestNodeConfig) Node
 }
 
 // TestNodeConfig bundles settings required to create a new node instance
