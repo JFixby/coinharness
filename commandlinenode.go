@@ -23,12 +23,10 @@ type CommandlineTestNode struct {
 	NodeExecutablePathProvider commandline.ExecutablePathProvider
 
 	p2pAddress string
-	rpcListen  string
 	rpcConnect string
 	profile    string
 	debugLevel string
 	appDir     string
-	endpoint   string
 
 	externalProcess *commandline.ExternalProcess
 
