@@ -7,7 +7,7 @@ package consolenode
 
 import (
 	"fmt"
-	"github.com/jfixby/cointest"
+	"github.com/jfixby/coinharness"
 	"github.com/jfixby/pin"
 	"github.com/jfixby/pin/commandline"
 	"net"
