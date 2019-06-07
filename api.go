@@ -2,13 +2,12 @@ package cointest
 
 type Network interface{}
 
-// RPCConnectionConfig describes the connection configuration parameters for the client.
-
-type RPCConnectionConfig interface {
-}
-
-type RPCConnectionConfigSpawner interface {
-	Spawn() RPCConnectionConfig
+type RPCConnectionConfig struct {
+	Host            string
+	Endpoint        string
+	User            string
+	Pass            string
+	CertificateFile string
 }
 
 type ActiveNet interface{}
