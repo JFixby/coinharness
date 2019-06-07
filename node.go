@@ -12,7 +12,7 @@ type TestNode interface {
 	Network() Network
 
 	// Start node process
-	Start(args *TestNodeStartArgs)
+	Start()
 
 	// Stop node process
 	Stop()
@@ -32,6 +32,9 @@ type TestNode interface {
 
 	// P2PAddress returns node p2p address
 	P2PAddress() string
+
+
+
 }
 
 // TestNodeFactory produces a new TestNode instance
@@ -51,12 +54,4 @@ type TestNodeConfig struct {
 
 	NodeRPCHost string
 	NodeRPCPort int
-}
-
-// TestNodeStartArgs bundles Start() arguments to minimize diff
-// in case a new argument for the function is added
-type TestNodeStartArgs struct {
-	ExtraArguments map[string]interface{}
-	DebugOutput    bool
-	MiningAddress  Address
 }
