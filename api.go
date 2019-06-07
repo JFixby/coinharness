@@ -1,4 +1,4 @@
-package cointest
+package coinharness
 
 type Network interface{}
 

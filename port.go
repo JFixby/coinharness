@@ -2,7 +2,7 @@
 // Use of this source code is governed by an ISC
 // license that can be found in the LICENSE file.
 
-package cointest
+package coinharness
 
 // NetPortManager is used by the test setup to manage issuing
 // a new network port number

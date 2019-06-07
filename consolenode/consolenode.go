@@ -16,13 +16,13 @@ import (
 )
 
 type NewConsoleNodeArgs struct {
-	ClientFac                  cointest.RPCClientFactory
+	ClientFac                  coinharness.RPCClientFactory
 	ConsoleCommandCook         ConsoleCommandCook
 	NodeExecutablePathProvider commandline.ExecutablePathProvider
 	RpcUser                    string
 	RpcPass                    string
 	AppDir                     string
-	ActiveNet                  cointest.Network
+	ActiveNet                  coinharness.Network
 	P2PHost                    string
 	NodeRPCHost                string
 	P2PPort                    int
@@ -41,7 +41,7 @@ func NewConsoleNode(args *NewConsoleNodeArgs) *ConsoleNode {
 		rpcPass:                    args.RpcPass,
 		appDir:                     args.AppDir,
 		endpoint:                   "ws",
-		rPCClient:                  &cointest.RPCConnection{MaxConnRetries: 20, RPCClientFactory: args.ClientFac},
+		rPCClient:                  &coinharness.RPCConnection{MaxConnRetries: 20, RPCClientFactory: args.ClientFac},
 		NodeExecutablePathProvider: args.NodeExecutablePathProvider,
 		network:                    args.ActiveNet,
 		ConsoleCommandCook:         args.ConsoleCommandCook,
@@ -67,11 +67,11 @@ type ConsoleNode struct {
 
 	externalProcess commandline.ExternalProcess
 
-	rPCClient *cointest.RPCConnection
+	rPCClient *coinharness.RPCConnection
 
-	miningAddress cointest.Address
+	miningAddress coinharness.Address
 
-	network cointest.Network
+	network coinharness.Network
 
 	ConsoleCommandCook ConsoleCommandCook
 
@@ -91,8 +91,8 @@ type ConsoleCommandParams struct {
 	Profile        string
 	CertFile       string
 	KeyFile        string
-	MiningAddress  cointest.Address
-	Network        cointest.Network
+	MiningAddress  coinharness.Address
+	Network        coinharness.Network
 }
 
 type ConsoleCommandCook interface {
@@ -100,8 +100,8 @@ type ConsoleCommandCook interface {
 }
 
 // RPCConnectionConfig produces a new connection config instance for RPC client
-func (node *ConsoleNode) RPCConnectionConfig() cointest.RPCConnectionConfig {
-	return cointest.RPCConnectionConfig{
+func (node *ConsoleNode) RPCConnectionConfig() coinharness.RPCConnectionConfig {
+	return coinharness.RPCConnectionConfig{
 		Host:            node.rpcListen,
 		Endpoint:        node.endpoint,
 		User:            node.rpcUser,
@@ -131,7 +131,7 @@ func (node *ConsoleNode) SetDebugNodeOutput(d bool) {
 	node.debugOutput = d
 }
 
-func (node *ConsoleNode) SetMiningAddress(address cointest.Address) {
+func (node *ConsoleNode) SetMiningAddress(address coinharness.Address) {
 	if node.IsRunning() {
 		pin.ReportTestSetupMalfunction(fmt.Errorf("Unable to set parameter, ConsoleNode is already running"))
 	}
@@ -145,7 +145,7 @@ func (node *ConsoleNode) P2PAddress() string {
 }
 
 // RPCClient returns node RPCConnection
-func (node *ConsoleNode) RPCClient() *cointest.RPCConnection {
+func (node *ConsoleNode) RPCClient() *coinharness.RPCConnection {
 	return node.rPCClient
 }
 
@@ -160,7 +160,7 @@ func (node *ConsoleNode) KeyFile() string {
 }
 
 // Network returns current network of the node
-func (node *ConsoleNode) Network() cointest.Network {
+func (node *ConsoleNode) Network() coinharness.Network {
 	return node.network
 }
 
