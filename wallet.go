@@ -70,6 +70,7 @@ type SendOutputsArgs struct {
 type CreateTransactionArgs struct {
 	Outputs []OutputTx
 	FeeRate CoinsAmount
+	Change bool
 }
 
 // NewAddressArgs bundles NewAddress() arguments to minimize diff
