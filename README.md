@@ -22,7 +22,13 @@ includes an wallet to streamline various classes of tests.
 This package was designed specifically to act as an RPC testing harness for
 `Decred` and `Bitcoin`. However, the constructs presented are general enough to be
 adapted to any project wishing to programmatically drive a node instance of its
-systems/integration tests. 
+systems/integration tests.
+
+## Applications
+
+ - [Decred regressions testing](https://github.com/JFixby/dcrregtest)
+
+ - [Bitcoin regressions testing](https://github.com/JFixby/btcregtest)
 
 ## License
 
