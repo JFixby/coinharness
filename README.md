@@ -29,7 +29,9 @@ systems/integration tests.
  - [Decred regressions testing](https://github.com/JFixby/dcrregtest)
 
  - [Bitcoin regressions testing](https://github.com/JFixby/btcregtest)
-
+ 
+ - [PicFight coin regressions testing](https://github.com/picfight/pfcregtest)
+ 
 ## License
 
 Licensed under the [copyfree](http://copyfree.org) ISC License.
