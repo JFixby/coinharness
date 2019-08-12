@@ -71,7 +71,7 @@ type CreateTransactionArgs struct {
 	Outputs []OutputTx
 	FeeRate CoinsAmount
 	Change  bool
-	TxVersion int
+	TxVersion int32
 }
 
 // NewAddressArgs bundles NewAddress() arguments to minimize diff
