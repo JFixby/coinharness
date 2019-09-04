@@ -24,6 +24,10 @@ type OutputTx interface{}
 
 type CoinsAmount interface{}
 
-type CreatedTransactionTx interface{}
-
+type CreatedTransactionTx struct {
+	Version  int32
+	TxIn     []InputTx
+	TxOut    []OutputTx
+	LockTime uint32
+}
 type SentOutputsHash interface{}
