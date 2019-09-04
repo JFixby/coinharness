@@ -24,16 +24,16 @@ type Hash interface{}
 
 type OutputTx interface {
 	PkScript() []byte
-	//TxHash() Hash
 	Value() int64
 }
 
 type CoinsAmount interface{}
 
-type CreatedTransactionTx struct {
-	Version  int32
-	TxIn     []InputTx
-	TxOut    []OutputTx
-	LockTime uint32
+type CreatedTransactionTx interface {
+	Version() int32
+	TxIn() []InputTx
+	TxOut() []OutputTx
+	LockTime() uint32
+	TxHash() Hash
 }
 type SentOutputsHash interface{}
