@@ -24,7 +24,8 @@ type Hash interface{}
 
 type OutputTx interface {
 	PkScript() []byte
-	TxHash() Hash
+	//TxHash() Hash
+	Value() int64
 }
 
 type CoinsAmount interface{}
