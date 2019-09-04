@@ -20,7 +20,12 @@ type Seed interface{}
 
 type InputTx interface{}
 
-type OutputTx interface{}
+type Hash interface{}
+
+type OutputTx interface {
+	PkScript() []byte
+	TxHash() Hash
+}
 
 type CoinsAmount interface{}
 
