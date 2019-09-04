@@ -42,3 +42,7 @@ type CreatedTransactionTx interface {
 }
 
 type SentOutputsHash interface{}
+
+type AddNodeArguments struct {
+	TargetAddr string
+}
