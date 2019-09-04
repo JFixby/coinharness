@@ -3,11 +3,8 @@ package coinharness
 import (
 	"fmt"
 	"github.com/jfixby/pin"
-	"reflect"
 	"testing"
 	"time"
-
-	"github.com/picfight/pfcd/rpcclient"
 )
 
 // JoinType is an enum representing a particular type of "node join". A node
@@ -47,7 +44,7 @@ func syncMempools(nodes []Harness) error {
 
 	for !poolsMatch {
 	retry:
-		firstPool, err := nodes[0].NodeRPCClient().(*rpcclient.Client).GetRawMempool()
+		firstPool, err := nodes[0].NodeRPCClient().GetRawMempool()
 		if err != nil {
 			return err
 		}
@@ -56,12 +53,13 @@ func syncMempools(nodes []Harness) error {
 		// first node, then we're done. Otherwise, drop back to the top
 		// of the loop and retry after a short wait period.
 		for _, node := range nodes[1:] {
-			nodePool, err := node.NodeRPCClient().(*rpcclient.Client).GetRawMempool()
+			nodePool, err := node.NodeRPCClient().GetRawMempool()
 			if err != nil {
 				return err
 			}
-
-			if !reflect.DeepEqual(firstPool, nodePool) {
+			//eq := reflect.DeepEqual(firstPool, nodePool);
+			eq := firstPool.EqualsTo(nodePool)
+			if !eq {
 				time.Sleep(time.Millisecond * 100)
 				goto retry
 			}
@@ -82,7 +80,7 @@ func syncBlocks(nodes []Harness) error {
 		blockHeights := make(map[int64]struct{})
 
 		for _, node := range nodes {
-			blockHeight, err := node.NodeRPCClient().(*rpcclient.Client).GetBlockCount()
+			blockHeight, err := node.NodeRPCClient().GetBlockCount()
 			if err != nil {
 				return err
 			}
@@ -105,20 +103,24 @@ func syncBlocks(nodes []Harness) error {
 // therefore in the case of disconnects, "from" will attempt to reestablish a
 // connection to the "to" harness.
 func ConnectNode(from Harness, to Harness) error {
-	peerInfo, err := from.NodeRPCClient().(*rpcclient.Client).GetPeerInfo()
+	peerInfo, err := from.NodeRPCClient().GetPeerInfo()
 	if err != nil {
 		return err
 	}
 	numPeers := len(peerInfo)
 
 	targetAddr := to.P2PAddress()
-	if err := from.NodeRPCClient().(*rpcclient.Client).AddNode(targetAddr, rpcclient.ANAdd); err != nil {
+	args := &AddNodeArguments{
+		TargetAddr: targetAddr,
+		//rpcclient.ANAdd,
+	}
+	if err := from.NodeRPCClient().AddNode(args); err != nil {
 		return err
 	}
 
 	// Block until a new connection has been established.
 	for attempts := 5; attempts > 0; attempts-- {
-		peerInfo, err = from.NodeRPCClient().(*rpcclient.Client).GetPeerInfo()
+		peerInfo, err = from.NodeRPCClient().GetPeerInfo()
 		if err != nil {
 			return err
 		}
@@ -131,19 +133,8 @@ func ConnectNode(from Harness, to Harness) error {
 	return fmt.Errorf("failed to connet node")
 }
 
-// Create a test chain with the desired number of mature coinbase outputs
-func generateTestChain(numToGenerate uint32, node *rpcclient.Client) error {
-	fmt.Printf("Generating %v blocks...\n", numToGenerate)
-	_, err := node.Generate(numToGenerate)
-	if err != nil {
-		return err
-	}
-	fmt.Println("Block generation complete.")
-	return nil
-}
-
 func assertConnectedTo(t *testing.T, nodeA Harness, nodeB Harness) {
-	nodeAPeers, err := nodeA.NodeRPCClient().(*rpcclient.Client).GetPeerInfo()
+	nodeAPeers, err := nodeA.NodeRPCClient().GetPeerInfo()
 	if err != nil {
 		t.Fatalf("unable to get nodeA's peer info")
 	}
