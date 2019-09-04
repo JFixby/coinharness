@@ -18,7 +18,11 @@ type Address interface {
 
 type Seed interface{}
 
-type InputTx interface{}
+type InputTx interface {
+	PreviousOutPoint() OutPoint
+}
+
+type OutPoint interface{}
 
 type Hash interface{}
 
