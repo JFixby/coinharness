@@ -36,4 +36,5 @@ type CreatedTransactionTx interface {
 	LockTime() uint32
 	TxHash() Hash
 }
+
 type SentOutputsHash interface{}

@@ -34,7 +34,7 @@ type Wallet interface {
 	// outputs while observing the desired fee rate. The passed fee rate should be
 	// expressed in satoshis-per-byte. The transaction being created can optionally
 	// include a change output indicated by the Change boolean.
-	CreateTransaction(args *CreateTransactionArgs) (*CreatedTransactionTx, error)
+	CreateTransaction(args *CreateTransactionArgs) (CreatedTransactionTx, error)
 
 	// SendOutputs creates, then sends a transaction paying to the specified output
 	// while observing the passed fee rate. The passed fee rate should be expressed
