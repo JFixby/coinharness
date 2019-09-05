@@ -41,9 +41,7 @@ type CreatedTransactionTx interface {
 	TxHash() Hash
 }
 
-type SentOutputsHash interface{}
-
 type AddNodeArguments struct {
 	TargetAddr string
-	Command interface{}
+	Command    interface{}
 }

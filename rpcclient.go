@@ -26,6 +26,7 @@ type RPCClient interface {
 	AddNode(arguments *AddNodeArguments) error
 	Internal() interface{}
 	Generate(blocks uint32) ([]Hash, error)
+	SendRawTransaction(tx CreatedTransactionTx, b bool) (Hash, error)
 }
 type PeerInfo struct {
 	Addr string

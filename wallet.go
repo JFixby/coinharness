@@ -39,7 +39,7 @@ type Wallet interface {
 	// SendOutputs creates, then sends a transaction paying to the specified output
 	// while observing the passed fee rate. The passed fee rate should be expressed
 	// in satoshis-per-byte.
-	SendOutputs(args *SendOutputsArgs) (SentOutputsHash, error)
+	SendOutputs(args *SendOutputsArgs) (Hash, error)
 
 	// UnlockOutputs unlocks any outputs which were previously locked due to
 	// being selected to fund a transaction via the CreateTransaction method.
