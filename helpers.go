@@ -3,6 +3,7 @@ package coinharness
 import (
 	"fmt"
 	"github.com/jfixby/pin"
+	"reflect"
 	"testing"
 	"time"
 )
@@ -57,8 +58,8 @@ func syncMempools(nodes []Harness) error {
 			if err != nil {
 				return err
 			}
-			//eq := reflect.DeepEqual(firstPool, nodePool);
-			eq := firstPool.EqualsTo(nodePool)
+			eq := reflect.DeepEqual(firstPool, nodePool)
+			//eq := firstPool.EqualsTo(nodePool)
 			if !eq {
 				time.Sleep(time.Millisecond * 100)
 				goto retry
