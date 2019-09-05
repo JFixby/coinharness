@@ -135,7 +135,7 @@ func ConnectNode(from *Harness, to *Harness, command interface{}) error {
 	return fmt.Errorf("failed to connet node")
 }
 
-func assertConnectedTo(t *testing.T, nodeA *Harness, nodeB *Harness) {
+func AssertConnectedTo(t *testing.T, nodeA *Harness, nodeB *Harness) {
 	nodeAPeers, err := nodeA.NodeRPCClient().GetPeerInfo()
 	if err != nil {
 		t.Fatalf("unable to get nodeA's peer info")
