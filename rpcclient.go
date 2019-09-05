@@ -22,16 +22,12 @@ type RPCClient interface {
 	Shutdown()
 	GetPeerInfo() ([]PeerInfo, error)
 	GetBlockCount() (int64, error)
-	GetRawMempool() (RawMempool, error)
+	GetRawMempool() ([]Hash, error)
 	AddNode(arguments *AddNodeArguments) error
 }
 
 type PeerInfo struct {
 	Addr string
-}
-
-type RawMempool interface {
-	EqualsTo(mempool RawMempool) bool
 }
 
 type RPCClientNotificationHandlers interface {
