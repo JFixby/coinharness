@@ -25,6 +25,7 @@ type RPCClient interface {
 	GetRawMempool() ([]Hash, error)
 	AddNode(arguments *AddNodeArguments) error
 	Internal() interface{}
+	Generate(blocks int)
 }
 type PeerInfo struct {
 	Addr string
