@@ -29,7 +29,7 @@ const (
 // passed JoinType. This function be used to to ensure all active test
 // harnesses are at a consistent state before proceeding to an assertion or
 // check within rpc tests.
-func JoinNodes(nodes []Harness, joinType JoinType) error {
+func JoinNodes(nodes []*Harness, joinType JoinType) error {
 	switch joinType {
 	case Blocks:
 		return syncBlocks(nodes)
@@ -40,7 +40,7 @@ func JoinNodes(nodes []Harness, joinType JoinType) error {
 }
 
 // syncMempools blocks until all nodes have identical mempools.
-func syncMempools(nodes []Harness) error {
+func syncMempools(nodes []*Harness) error {
 	poolsMatch := false
 
 	for !poolsMatch {
@@ -73,7 +73,7 @@ func syncMempools(nodes []Harness) error {
 }
 
 // syncBlocks blocks until all nodes report the same block height.
-func syncBlocks(nodes []Harness) error {
+func syncBlocks(nodes []*Harness) error {
 	blocksMatch := false
 
 	for !blocksMatch {
