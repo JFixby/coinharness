@@ -24,8 +24,8 @@ type RPCClient interface {
 	GetBlockCount() (int64, error)
 	GetRawMempool() ([]Hash, error)
 	AddNode(arguments *AddNodeArguments) error
+	Internal() interface{}
 }
-
 type PeerInfo struct {
 	Addr string
 }
