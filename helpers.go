@@ -102,7 +102,7 @@ func syncBlocks(nodes []Harness) error {
 // harness and the "to" harness.  The connection made is flagged as persistent,
 // therefore in the case of disconnects, "from" will attempt to reestablish a
 // connection to the "to" harness.
-func ConnectNode(from Harness, to Harness) error {
+func ConnectNode(from Harness, to Harness, command interface{}) error {
 	peerInfo, err := from.NodeRPCClient().GetPeerInfo()
 	if err != nil {
 		return err
@@ -113,6 +113,7 @@ func ConnectNode(from Harness, to Harness) error {
 	args := &AddNodeArguments{
 		TargetAddr: targetAddr,
 		//rpcclient.ANAdd,
+		Command: command,
 	}
 	if err := from.NodeRPCClient().AddNode(args); err != nil {
 		return err

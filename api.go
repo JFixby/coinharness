@@ -45,4 +45,5 @@ type SentOutputsHash interface{}
 
 type AddNodeArguments struct {
 	TargetAddr string
+	Command interface{}
 }
