@@ -101,7 +101,7 @@ type NewAddressArgs struct {
 // in case a new argument for the function is added
 type TestWalletStartArgs struct {
 	NodeRPCCertFile          string
-	WalletExtraArguments     map[string]interface{}
+	ExtraArguments           map[string]interface{}
 	DebugOutput              bool
 	MaxSecondsToWaitOnLaunch int
 	NodeRPCConfig            RPCConnectionConfig

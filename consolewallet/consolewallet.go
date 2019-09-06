@@ -77,8 +77,6 @@ type ConsoleWallet struct {
 	network coinharness.Network
 
 	ConsoleCommandCook ConsoleCommandCook
-
-	extraArgs map[string]interface{}
 }
 
 type ConsoleCommandParams struct {
@@ -113,14 +111,6 @@ func (Wallet *ConsoleWallet) RPCConnectionConfig() coinharness.RPCConnectionConf
 // launch external process of the Wallet
 func (Wallet *ConsoleWallet) FullConsoleCommand() string {
 	return Wallet.externalProcess.FullConsoleCommand()
-}
-
-func (Wallet *ConsoleWallet) SetExtraArguments(WalletExtraArguments map[string]interface{}) {
-	if Wallet.IsRunning() {
-		pin.ReportTestSetupMalfunction(fmt.Errorf("Unable to set parameter, ConsoleWallet is already running"))
-	}
-
-	Wallet.extraArgs = WalletExtraArguments
 }
 
 // RPCClient returns Wallet RPCConnection
@@ -161,7 +151,7 @@ func (Wallet *ConsoleWallet) Start(args *coinharness.TestWalletStartArgs) error 
 	Wallet.externalProcess.CommandName = exec
 
 	consoleCommandParams := &ConsoleCommandParams{
-		ExtraArguments: Wallet.extraArgs,
+		ExtraArguments: args.ExtraArguments,
 		RpcUser:        Wallet.rpcUser,
 		RpcPass:        Wallet.rpcPass,
 		RpcConnect:     Wallet.nodeRPCListener,
