@@ -90,6 +90,7 @@ type ConsoleCommandParams struct {
 	CertFile       string
 	NodeCertFile   string
 	KeyFile        string
+	Network        coinharness.Network
 }
 
 type ConsoleCommandCook interface {
@@ -161,6 +162,7 @@ func (Wallet *ConsoleWallet) Start(args *coinharness.TestWalletStartArgs) error 
 		CertFile:       Wallet.CertFile(),
 		NodeCertFile:   args.NodeRPCCertFile,
 		KeyFile:        Wallet.KeyFile(),
+		Network:        Wallet.network,
 	}
 
 	Wallet.externalProcess.Arguments = commandline.ArgumentsToStringArray(
@@ -175,7 +177,7 @@ func (Wallet *ConsoleWallet) Start(args *coinharness.TestWalletStartArgs) error 
 	Wallet.rPCClient.Connect(cfg, nil)
 	fmt.Println("Wallet RPC client connected.")
 
-	panic("")
+	return nil
 }
 
 // Stop interrupts the running Wallet process.
@@ -218,8 +220,11 @@ func (wallet *ConsoleWallet) CreateTransaction(args *coinharness.CreateTransacti
 	panic("")
 }
 
-func (wallet *ConsoleWallet) NewAddress(_ *coinharness.NewAddressArgs) (coinharness.Address, error) {
-	panic("")
+func (wallet *ConsoleWallet) NewAddress(arg coinharness.NewAddressArgs) (coinharness.Address, error) {
+	return wallet. //
+		RPCClient(). //
+		Connection(). //
+		GetNewAddress(arg.Account)
 }
 
 func (wallet *ConsoleWallet) SendOutputs(args *coinharness.SendOutputsArgs) (coinharness.Hash, error) {
