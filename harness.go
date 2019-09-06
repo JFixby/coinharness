@@ -25,6 +25,12 @@ type Harness struct {
 	MiningAddress Address
 }
 
+// WalletRPCClient manages access to the RPCClient,
+// test cases suppose to use it when the need access to the Wallet RPC
+func (harness *Harness) WalletRPCClient() RPCClient {
+	return harness.Wallet.RPCClient().rpcClient
+}
+
 // NodeRPCClient manages access to the RPCClient,
 // test cases suppose to use it when the need access to the node RPC
 func (harness *Harness) NodeRPCClient() RPCClient {
