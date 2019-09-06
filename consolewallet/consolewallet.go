@@ -14,12 +14,17 @@ type NewConsoleWalletArgs struct {
 	ClientFac                    coinharness.RPCClientFactory
 	ConsoleCommandCook           ConsoleCommandCook
 	WalletExecutablePathProvider commandline.ExecutablePathProvider
-	RpcUser                      string
-	RpcPass                      string
-	AppDir                       string
-	ActiveNet                    coinharness.Network
-	WalletRPCHost                string
-	WalletRPCPort                int
+
+	AppDir    string
+	ActiveNet coinharness.Network
+
+	NodeRPCHost string
+	NodeRPCPort int
+	RpcUser     string
+	RpcPass     string
+
+	WalletRPCHost string
+	WalletRPCPort int
 }
 
 func NewConsoleWallet(args *NewConsoleWalletArgs) *ConsoleWallet {
@@ -28,7 +33,8 @@ func NewConsoleWallet(args *NewConsoleWalletArgs) *ConsoleWallet {
 	pin.AssertNotNil("ClientFac", args.ClientFac)
 
 	Wallet := &ConsoleWallet{
-		rpcListen:                    net.JoinHostPort(args.WalletRPCHost, strconv.Itoa(args.WalletRPCPort)),
+		nodeRPCListener:              net.JoinHostPort(args.NodeRPCHost, strconv.Itoa(args.NodeRPCPort)),
+		walletRpcListener:            net.JoinHostPort(args.WalletRPCHost, strconv.Itoa(args.WalletRPCPort)),
 		rpcUser:                      args.RpcUser,
 		rpcPass:                      args.RpcPass,
 		appDir:                       args.AppDir,
@@ -47,14 +53,13 @@ type ConsoleWallet struct {
 	// WalletExecutablePathProvider returns path to the dcrd executable
 	WalletExecutablePathProvider commandline.ExecutablePathProvider
 
-	rpcUser    string
-	rpcPass    string
-	rpcListen  string
-	rpcConnect string
-	profile    string
-	debugLevel string
-	appDir     string
-	endpoint   string
+	rpcUser           string
+	rpcPass           string
+	nodeRPCListener   string
+	walletRpcListener string
+	appDir            string
+	debugLevel        string
+	endpoint          string
 
 	externalProcess commandline.ExternalProcess
 
@@ -64,8 +69,7 @@ type ConsoleWallet struct {
 
 	ConsoleCommandCook ConsoleCommandCook
 
-	debugOutput bool
-	extraArgs   map[string]interface{}
+	extraArgs map[string]interface{}
 }
 
 type ConsoleCommandParams struct {
@@ -76,10 +80,9 @@ type ConsoleCommandParams struct {
 	RpcListen      string
 	AppDir         string
 	DebugLevel     string
-	Profile        string
 	CertFile       string
+	NodeCertFile   string
 	KeyFile        string
-	Network        coinharness.Network
 }
 
 type ConsoleCommandCook interface {
@@ -89,7 +92,7 @@ type ConsoleCommandCook interface {
 // RPCConnectionConfig produces a new connection config instance for RPC client
 func (Wallet *ConsoleWallet) RPCConnectionConfig() coinharness.RPCConnectionConfig {
 	return coinharness.RPCConnectionConfig{
-		Host:            Wallet.rpcListen,
+		Host:            Wallet.walletRpcListener,
 		Endpoint:        Wallet.endpoint,
 		User:            Wallet.rpcUser,
 		Pass:            Wallet.rpcPass,
@@ -109,13 +112,6 @@ func (Wallet *ConsoleWallet) SetExtraArguments(WalletExtraArguments map[string]i
 	}
 
 	Wallet.extraArgs = WalletExtraArguments
-}
-
-func (Wallet *ConsoleWallet) SetDebugWalletOutput(d bool) {
-	if Wallet.IsRunning() {
-		pin.ReportTestSetupMalfunction(fmt.Errorf("Unable to set parameter, ConsoleWallet is already running"))
-	}
-	Wallet.debugOutput = d
 }
 
 // RPCClient returns Wallet RPCConnection
@@ -159,20 +155,19 @@ func (Wallet *ConsoleWallet) Start(args *coinharness.TestWalletStartArgs) error 
 		ExtraArguments: Wallet.extraArgs,
 		RpcUser:        Wallet.rpcUser,
 		RpcPass:        Wallet.rpcPass,
-		RpcConnect:     Wallet.rpcConnect,
-		RpcListen:      Wallet.rpcListen,
+		RpcConnect:     Wallet.nodeRPCListener,
+		RpcListen:      Wallet.walletRpcListener,
 		AppDir:         Wallet.appDir,
 		DebugLevel:     Wallet.debugLevel,
-		Profile:        Wallet.profile,
 		CertFile:       Wallet.CertFile(),
+		NodeCertFile:   args.NodeRPCCertFile,
 		KeyFile:        Wallet.KeyFile(),
-		Network:        Wallet.network,
 	}
 
 	Wallet.externalProcess.Arguments = commandline.ArgumentsToStringArray(
 		Wallet.ConsoleCommandCook.CookArguments(consoleCommandParams),
 	)
-	Wallet.externalProcess.Launch(Wallet.debugOutput)
+	Wallet.externalProcess.Launch(args.DebugOutput)
 	// Wallet RPC instance will create a cert file when it is ready for incoming calls
 	pin.WaitForFile(Wallet.CertFile(), 7)
 

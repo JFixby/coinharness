@@ -5,13 +5,17 @@
 
 package coinharness
 
+type StartNodeArgs struct {
+	DebugOutput bool
+}
+
 // Node wraps optional test node implementations for different test setups
 type Node interface {
 	// Network returns current network of the node
 	Network() Network
 
 	// Start node process
-	Start()
+	Start(args *StartNodeArgs)
 
 	// Stop node process
 	Stop()
@@ -32,7 +36,6 @@ type Node interface {
 	// P2PAddress returns node p2p address
 	P2PAddress() string
 
-	SetDebugNodeOutput(b bool)
 	SetMiningAddress(address Address)
 	SetExtraArguments(NodeExtraArguments map[string]interface{})
 }

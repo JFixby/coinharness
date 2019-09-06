@@ -75,8 +75,7 @@ type ConsoleNode struct {
 
 	ConsoleCommandCook ConsoleCommandCook
 
-	debugOutput bool
-	extraArgs   map[string]interface{}
+	extraArgs map[string]interface{}
 }
 
 type ConsoleCommandParams struct {
@@ -124,13 +123,6 @@ func (node *ConsoleNode) SetExtraArguments(NodeExtraArguments map[string]interfa
 	node.extraArgs = NodeExtraArguments
 }
 
-func (node *ConsoleNode) SetDebugNodeOutput(d bool) {
-	if node.IsRunning() {
-		pin.ReportTestSetupMalfunction(fmt.Errorf("Unable to set parameter, ConsoleNode is already running"))
-	}
-	node.debugOutput = d
-}
-
 func (node *ConsoleNode) SetMiningAddress(address coinharness.Address) {
 	if node.IsRunning() {
 		pin.ReportTestSetupMalfunction(fmt.Errorf("Unable to set parameter, ConsoleNode is already running"))
@@ -171,7 +163,7 @@ func (node *ConsoleNode) IsRunning() bool {
 
 // Start node process. Deploys working dir, launches dcrd using command-line,
 // connects RPC client to the node.
-func (node *ConsoleNode) Start() {
+func (node *ConsoleNode) Start(args *coinharness.StartNodeArgs) {
 	if node.IsRunning() {
 		pin.ReportTestSetupMalfunction(fmt.Errorf("ConsoleNode is already running"))
 	}
@@ -200,7 +192,7 @@ func (node *ConsoleNode) Start() {
 	node.externalProcess.Arguments = commandline.ArgumentsToStringArray(
 		node.ConsoleCommandCook.CookArguments(consoleCommandParams),
 	)
-	node.externalProcess.Launch(node.debugOutput)
+	node.externalProcess.Launch(args.DebugOutput)
 	// Node RPC instance will create a cert file when it is ready for incoming calls
 	pin.WaitForFile(node.CertFile(), 7)
 

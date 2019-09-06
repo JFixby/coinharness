@@ -68,11 +68,11 @@ type TestWalletFactory interface {
 
 // TestWalletConfig bundles settings required to create a new wallet instance
 type TestWalletConfig struct {
-	Seed          Seed //[]byte // chainhash.HashSize + 4
-	WalletRPCHost string
-	WalletRPCPort int
-	ActiveNet     ActiveNet
-	WorkingDir    string
+	Seed        Seed //[]byte // chainhash.HashSize + 4
+	NodeRPCHost string
+	NodeRPCPort int
+	ActiveNet   ActiveNet
+	WorkingDir  string
 }
 
 type SendOutputsArgs struct {
@@ -100,7 +100,7 @@ type NewAddressArgs struct {
 type TestWalletStartArgs struct {
 	NodeRPCCertFile          string
 	WalletExtraArguments     map[string]interface{}
-	DebugWalletOutput        bool
+	DebugOutput              bool
 	MaxSecondsToWaitOnLaunch int
 	NodeRPCConfig            RPCConnectionConfig
 }
