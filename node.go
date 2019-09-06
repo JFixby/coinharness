@@ -6,7 +6,9 @@
 package coinharness
 
 type StartNodeArgs struct {
-	DebugOutput bool
+	DebugOutput    bool
+	MiningAddress  Address
+	ExtraArguments map[string]interface{}
 }
 
 // Node wraps optional test node implementations for different test setups
@@ -35,9 +37,6 @@ type Node interface {
 
 	// P2PAddress returns node p2p address
 	P2PAddress() string
-
-	SetMiningAddress(address Address)
-	SetExtraArguments(NodeExtraArguments map[string]interface{})
 }
 
 // TestNodeFactory produces a new Node instance

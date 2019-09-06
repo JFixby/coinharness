@@ -69,13 +69,9 @@ type ConsoleNode struct {
 
 	rPCClient *coinharness.RPCConnection
 
-	miningAddress coinharness.Address
-
 	network coinharness.Network
 
 	ConsoleCommandCook ConsoleCommandCook
-
-	extraArgs map[string]interface{}
 }
 
 type ConsoleCommandParams struct {
@@ -113,22 +109,6 @@ func (node *ConsoleNode) RPCConnectionConfig() coinharness.RPCConnectionConfig {
 // launch external process of the node
 func (node *ConsoleNode) FullConsoleCommand() string {
 	return node.externalProcess.FullConsoleCommand()
-}
-
-func (node *ConsoleNode) SetExtraArguments(NodeExtraArguments map[string]interface{}) {
-	if node.IsRunning() {
-		pin.ReportTestSetupMalfunction(fmt.Errorf("Unable to set parameter, ConsoleNode is already running"))
-	}
-
-	node.extraArgs = NodeExtraArguments
-}
-
-func (node *ConsoleNode) SetMiningAddress(address coinharness.Address) {
-	if node.IsRunning() {
-		pin.ReportTestSetupMalfunction(fmt.Errorf("Unable to set parameter, ConsoleNode is already running"))
-	}
-
-	node.miningAddress = address
 }
 
 // P2PAddress returns node p2p address
@@ -174,7 +154,7 @@ func (node *ConsoleNode) Start(args *coinharness.StartNodeArgs) {
 	node.externalProcess.CommandName = exec
 
 	consoleCommandParams := &ConsoleCommandParams{
-		ExtraArguments: node.extraArgs,
+		ExtraArguments: args.ExtraArguments,
 		RpcUser:        node.rpcUser,
 		RpcPass:        node.rpcPass,
 		RpcConnect:     node.rpcConnect,
@@ -185,7 +165,7 @@ func (node *ConsoleNode) Start(args *coinharness.StartNodeArgs) {
 		Profile:        node.profile,
 		CertFile:       node.CertFile(),
 		KeyFile:        node.KeyFile(),
-		MiningAddress:  node.miningAddress,
+		MiningAddress:  args.MiningAddress,
 		Network:        node.network,
 	}
 
