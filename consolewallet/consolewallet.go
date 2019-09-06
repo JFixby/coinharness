@@ -1,9 +1,4 @@
-// Copyright (c) 2018 The btcsuite developers
-// Copyright (c) 2018 The Decred developers
-// Use of this source code is governed by an ISC
-// license that can be found in the LICENSE file.
-
-package consoleWallet
+package consolewallet
 
 import (
 	"fmt"
@@ -16,13 +11,13 @@ import (
 )
 
 type NewConsoleWalletArgs struct {
-	ClientFac                  coinharness.RPCClientFactory
-	ConsoleCommandCook         ConsoleCommandCook
+	ClientFac                    coinharness.RPCClientFactory
+	ConsoleCommandCook           ConsoleCommandCook
 	WalletExecutablePathProvider commandline.ExecutablePathProvider
-	RpcUser                    string
-	RpcPass                    string
-	AppDir                     string
-	ActiveNet                  coinharness.Network
+	RpcUser                      string
+	RpcPass                      string
+	AppDir                       string
+	ActiveNet                    coinharness.Network
 	WalletRPCHost                string
 	WalletRPCPort                int
 }
@@ -33,15 +28,15 @@ func NewConsoleWallet(args *NewConsoleWalletArgs) *ConsoleWallet {
 	pin.AssertNotNil("ClientFac", args.ClientFac)
 
 	Wallet := &ConsoleWallet{
-		rpcListen:                  net.JoinHostPort(args.WalletRPCHost, strconv.Itoa(args.WalletRPCPort)),
-		rpcUser:                    args.RpcUser,
-		rpcPass:                    args.RpcPass,
-		appDir:                     args.AppDir,
-		endpoint:                   "ws",
-		rPCClient:                  &coinharness.RPCConnection{MaxConnRetries: 20, RPCClientFactory: args.ClientFac},
+		rpcListen:                    net.JoinHostPort(args.WalletRPCHost, strconv.Itoa(args.WalletRPCPort)),
+		rpcUser:                      args.RpcUser,
+		rpcPass:                      args.RpcPass,
+		appDir:                       args.AppDir,
+		endpoint:                     "ws",
+		rPCClient:                    &coinharness.RPCConnection{MaxConnRetries: 20, RPCClientFactory: args.ClientFac},
 		WalletExecutablePathProvider: args.WalletExecutablePathProvider,
-		network:                    args.ActiveNet,
-		ConsoleCommandCook:         args.ConsoleCommandCook,
+		network:                      args.ActiveNet,
+		ConsoleCommandCook:           args.ConsoleCommandCook,
 	}
 	return Wallet
 }
@@ -150,7 +145,7 @@ func (Wallet *ConsoleWallet) IsRunning() bool {
 
 // Start Wallet process. Deploys working dir, launches dcrd using command-line,
 // connects RPC client to the Wallet.
-func (Wallet *ConsoleWallet) Start() {
+func (Wallet *ConsoleWallet) Start(args *coinharness.TestWalletStartArgs) error {
 	if Wallet.IsRunning() {
 		pin.ReportTestSetupMalfunction(fmt.Errorf("ConsoleWallet is already running"))
 	}
@@ -185,6 +180,8 @@ func (Wallet *ConsoleWallet) Start() {
 	cfg := Wallet.RPCConnectionConfig()
 	Wallet.rPCClient.Connect(cfg, nil)
 	fmt.Println("Wallet RPC client connected.")
+
+	panic("")
 }
 
 // Stop interrupts the running Wallet process.
@@ -207,6 +204,8 @@ func (Wallet *ConsoleWallet) Stop() {
 	// Delete files, RPC servers will recreate them on the next launch sequence
 	pin.DeleteFile(Wallet.CertFile())
 	pin.DeleteFile(Wallet.KeyFile())
+
+	panic("")
 }
 
 // Dispose simply stops the Wallet process if running
@@ -215,4 +214,44 @@ func (Wallet *ConsoleWallet) Dispose() error {
 		Wallet.Stop()
 	}
 	return nil
+}
+
+func (Wallet *ConsoleWallet) ConfirmedBalance() coinharness.CoinsAmount {
+	panic("")
+}
+
+func (wallet *ConsoleWallet) CreateTransaction(args *coinharness.CreateTransactionArgs) (coinharness.CreatedTransactionTx, error) {
+	panic("")
+}
+
+func (wallet *ConsoleWallet) NewAddress(_ *coinharness.NewAddressArgs) (coinharness.Address, error) {
+	panic("")
+}
+
+func (wallet *ConsoleWallet) SendOutputs(args *coinharness.SendOutputsArgs) (coinharness.Hash, error) {
+	panic("")
+}
+
+func (wallet *ConsoleWallet) Sync() {
+	panic("")
+}
+
+func (wallet *ConsoleWallet) UnlockOutputs(inputs []coinharness.InputTx) {
+	panic("")
+}
+
+func (wallet *ConsoleWallet) CreateNewAccount(accountName string) error {
+	panic("")
+}
+
+func (wallet *ConsoleWallet) GetBalance(accountName string) (coinharness.CoinsAmount, error) {
+	panic("")
+}
+
+func (wallet *ConsoleWallet) GetNewAddress(accountName string) (coinharness.Address, error) {
+	panic("")
+}
+
+func (wallet *ConsoleWallet) ValidateAddress(address coinharness.Address) (*coinharness.ValidateAddressResult, error) {
+	panic("")
 }

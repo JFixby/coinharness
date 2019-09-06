@@ -28,6 +28,7 @@ type RPCClient interface {
 	Generate(blocks uint32) ([]Hash, error)
 	SendRawTransaction(tx CreatedTransactionTx, b bool) (Hash, error)
 }
+
 type PeerInfo struct {
 	Addr string
 }

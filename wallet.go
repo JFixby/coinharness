@@ -47,6 +47,17 @@ type Wallet interface {
 
 	// RPCClient returns node RPCConnection
 	RPCClient() *RPCConnection
+
+	GetNewAddress(accountName string) (Address, error)
+	CreateNewAccount(accountName string) error
+	ValidateAddress(address Address) (*ValidateAddressResult, error)
+	GetBalance(accountName string) (CoinsAmount, error)
+}
+
+type ValidateAddressResult struct {
+	IsValid  bool
+	IsMine   bool
+	IsScript bool
 }
 
 // TestWalletFactory produces a new Wallet instance
