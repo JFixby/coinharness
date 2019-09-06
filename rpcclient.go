@@ -27,6 +27,7 @@ type RPCClient interface {
 	Internal() interface{}
 	Generate(blocks uint32) ([]Hash, error)
 	SendRawTransaction(tx CreatedTransactionTx, b bool) (Hash, error)
+	GetNewAddress(accountName string) (Address, error)
 }
 
 type PeerInfo struct {
