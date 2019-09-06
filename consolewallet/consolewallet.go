@@ -32,6 +32,15 @@ func NewConsoleWallet(args *NewConsoleWalletArgs) *ConsoleWallet {
 	pin.AssertNotNil("ActiveNet", args.ActiveNet)
 	pin.AssertNotNil("ClientFac", args.ClientFac)
 
+	pin.AssertNotNil("args.NodeRPCHost", args.NodeRPCHost)
+	pin.AssertNotEmpty("args.NodeRPCHost", args.NodeRPCHost)
+
+	pin.AssertNotNil("args.WalletRPCHost", args.WalletRPCHost)
+	pin.AssertNotEmpty("args.WalletRPCHost", args.WalletRPCHost)
+
+	pin.AssertTrue("args.NodeRPCPort", args.NodeRPCPort != 0)
+	pin.AssertTrue("args.WalletRPCPort", args.WalletRPCPort != 0)
+
 	Wallet := &ConsoleWallet{
 		nodeRPCListener:              net.JoinHostPort(args.NodeRPCHost, strconv.Itoa(args.NodeRPCPort)),
 		walletRpcListener:            net.JoinHostPort(args.WalletRPCHost, strconv.Itoa(args.WalletRPCPort)),
