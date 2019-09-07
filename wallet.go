@@ -75,6 +75,11 @@ type TestWalletConfig struct {
 	WalletRPCPort int
 	ActiveNet     ActiveNet
 	WorkingDir    string
+
+	NodeUser     string
+	NodePassword string
+	WalletUser     string
+	WalletPassword string
 }
 
 type SendOutputsArgs struct {

@@ -54,6 +54,8 @@ type TestNodeConfig struct {
 	P2PHost string
 	P2PPort int
 
-	NodeRPCHost string
-	NodeRPCPort int
+	NodeRPCHost  string
+	NodeRPCPort  int
+	NodeUser     string
+	NodePassword string
 }

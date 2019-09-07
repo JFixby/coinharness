@@ -20,11 +20,13 @@ type NewConsoleWalletArgs struct {
 
 	NodeRPCHost string
 	NodeRPCPort int
-	RpcUser     string
-	RpcPass     string
+	NodeUser    string
+	NodePass    string
 
 	WalletRPCHost string
 	WalletRPCPort int
+	WalletUser    string
+	WalletPass    string
 }
 
 func NewConsoleWallet(args *NewConsoleWalletArgs) *ConsoleWallet {
@@ -44,8 +46,10 @@ func NewConsoleWallet(args *NewConsoleWalletArgs) *ConsoleWallet {
 	Wallet := &ConsoleWallet{
 		nodeRPCListener:              net.JoinHostPort(args.NodeRPCHost, strconv.Itoa(args.NodeRPCPort)),
 		walletRpcListener:            net.JoinHostPort(args.WalletRPCHost, strconv.Itoa(args.WalletRPCPort)),
-		rpcUser:                      args.RpcUser,
-		rpcPass:                      args.RpcPass,
+		WalletRpcUser:                args.WalletUser,
+		WalletRpcPass:                args.WalletPass,
+		NodeRpcUser:                  args.NodeUser,
+		NodeRpcPass:                  args.NodePass,
 		appDir:                       args.AppDir,
 		endpoint:                     "ws",
 		rPCClient:                    &coinharness.RPCConnection{MaxConnRetries: 20, RPCClientFactory: args.ClientFac},
@@ -62,8 +66,12 @@ type ConsoleWallet struct {
 	// WalletExecutablePathProvider returns path to the dcrd executable
 	WalletExecutablePathProvider commandline.ExecutablePathProvider
 
-	rpcUser           string
-	rpcPass           string
+	NodeRpcUser string
+	NodeRpcPass string
+
+	WalletRpcUser string
+	WalletRpcPass string
+
 	nodeRPCListener   string
 	walletRpcListener string
 	appDir            string
@@ -81,8 +89,10 @@ type ConsoleWallet struct {
 
 type ConsoleCommandParams struct {
 	ExtraArguments map[string]interface{}
-	RpcUser        string
-	RpcPass        string
+	NodeRpcUser    string
+	NodeRpcPass    string
+	WalletRpcUser  string
+	WalletRpcPass  string
 	RpcConnect     string
 	RpcListen      string
 	AppDir         string
@@ -102,8 +112,8 @@ func (Wallet *ConsoleWallet) RPCConnectionConfig() coinharness.RPCConnectionConf
 	return coinharness.RPCConnectionConfig{
 		Host:            Wallet.walletRpcListener,
 		Endpoint:        Wallet.endpoint,
-		User:            Wallet.rpcUser,
-		Pass:            Wallet.rpcPass,
+		User:            Wallet.WalletRpcUser,
+		Pass:            Wallet.WalletRpcPass,
 		CertificateFile: Wallet.CertFile(),
 	}
 }
@@ -153,8 +163,10 @@ func (Wallet *ConsoleWallet) Start(args *coinharness.TestWalletStartArgs) error 
 
 	consoleCommandParams := &ConsoleCommandParams{
 		ExtraArguments: args.ExtraArguments,
-		RpcUser:        Wallet.rpcUser,
-		RpcPass:        Wallet.rpcPass,
+		NodeRpcUser:    Wallet.NodeRpcUser,
+		NodeRpcPass:    Wallet.NodeRpcPass,
+		WalletRpcUser:  Wallet.WalletRpcUser,
+		WalletRpcPass:  Wallet.WalletRpcPass,
 		RpcConnect:     Wallet.nodeRPCListener,
 		RpcListen:      Wallet.walletRpcListener,
 		AppDir:         Wallet.appDir,
@@ -220,7 +232,11 @@ func (wallet *ConsoleWallet) CreateTransaction(args *coinharness.CreateTransacti
 	panic("")
 }
 
-func (wallet *ConsoleWallet) NewAddress(arg coinharness.NewAddressArgs) (coinharness.Address, error) {
+func (wallet *ConsoleWallet) NewAddress(arg *coinharness.NewAddressArgs) (coinharness.Address, error) {
+	if arg == nil {
+		arg = &coinharness.NewAddressArgs{}
+		arg.Account = "default"
+	}
 	return wallet. //
 		RPCClient(). //
 		Connection(). //
