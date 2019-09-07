@@ -29,23 +29,23 @@ const (
 // passed JoinType. This function be used to to ensure all active test
 // harnesses are at a consistent state before proceeding to an assertion or
 // check within rpc tests.
-func JoinNodes(nodes []*Harness, joinType JoinType) error {
+func JoinNodes(command interface{}, nodes []*Harness, joinType JoinType) error {
 	switch joinType {
 	case Blocks:
 		return syncBlocks(nodes)
 	case Mempools:
-		return syncMempools(nodes)
+		return syncMempools(command, nodes)
 	}
 	return nil
 }
 
 // syncMempools blocks until all nodes have identical mempools.
-func syncMempools(nodes []*Harness) error {
+func syncMempools(command interface{}, nodes []*Harness) error {
 	poolsMatch := false
 
 	for !poolsMatch {
 	retry:
-		firstPool, err := nodes[0].NodeRPCClient().GetRawMempool()
+		firstPool, err := nodes[0].NodeRPCClient().GetRawMempool(command)
 		if err != nil {
 			return err
 		}
@@ -54,7 +54,7 @@ func syncMempools(nodes []*Harness) error {
 		// first node, then we're done. Otherwise, drop back to the top
 		// of the loop and retry after a short wait period.
 		for _, node := range nodes[1:] {
-			nodePool, err := node.NodeRPCClient().GetRawMempool()
+			nodePool, err := node.NodeRPCClient().GetRawMempool(command)
 			if err != nil {
 				return err
 			}

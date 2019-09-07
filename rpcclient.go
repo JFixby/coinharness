@@ -22,7 +22,7 @@ type RPCClient interface {
 	Shutdown()
 	GetPeerInfo() ([]PeerInfo, error)
 	GetBlockCount() (int64, error)
-	GetRawMempool() ([]Hash, error)
+	GetRawMempool(command interface{}) ([]Hash, error)
 	AddNode(arguments *AddNodeArguments) error
 	Internal() interface{}
 	Generate(blocks uint32) ([]Hash, error)
