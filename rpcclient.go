@@ -29,6 +29,13 @@ type RPCClient interface {
 	SendRawTransaction(tx CreatedTransactionTx, b bool) (Hash, error)
 	GetNewAddress(accountName string) (Address, error)
 	GetBuildVersion() (BuildVersion, error)
+	GetBestBlock() (Hash, int64, error)
+	ConfirmedBalance() CoinsAmount
+	ValidateAddress(address Address) (*ValidateAddressResult, error)
+	CreateNewAccount(accountName string) error
+	UnlockOutputs(inputs []InputTx)
+	GetBalance(accountName string) (CoinsAmount, error)
+	CreateTransaction(args *CreateTransactionArgs) (CreatedTransactionTx, error)
 }
 
 type PeerInfo struct {

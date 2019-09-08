@@ -23,9 +23,10 @@ type Wallet interface {
 	// This action is final (irreversible)
 	Dispose() error
 
-	// Sync block until the wallet has fully synced up to the tip of the main
-	// chain.
-	Sync()
+	// Sync block until the wallet has fully synced up to the desiredHeight
+	Sync(desiredHeight int64) int64
+
+	SyncedHeight() int64
 
 	// ConfirmedBalance returns wallet balance
 	ConfirmedBalance() CoinsAmount
@@ -77,8 +78,8 @@ type TestWalletConfig struct {
 	ActiveNet     ActiveNet
 	WorkingDir    string
 
-	NodeUser     string
-	NodePassword string
+	NodeUser       string
+	NodePassword   string
 	WalletUser     string
 	WalletPassword string
 }
