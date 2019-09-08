@@ -28,10 +28,15 @@ type RPCClient interface {
 	Generate(blocks uint32) ([]Hash, error)
 	SendRawTransaction(tx CreatedTransactionTx, b bool) (Hash, error)
 	GetNewAddress(accountName string) (Address, error)
+	GetBuildVersion() (BuildVersion, error)
 }
 
 type PeerInfo struct {
 	Addr string
+}
+
+type BuildVersion interface {
+	VersionString() string
 }
 
 type RPCClientNotificationHandlers interface {
