@@ -15,6 +15,7 @@ type ActiveNet interface{}
 type Address interface {
 	String() string
 	IsForNet(network Network) bool
+	Internal() interface{}
 }
 
 type Seed interface{}
