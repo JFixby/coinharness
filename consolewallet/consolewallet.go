@@ -182,7 +182,7 @@ func (Wallet *ConsoleWallet) Start(args *coinharness.TestWalletStartArgs) error 
 	)
 	Wallet.externalProcess.Launch(args.DebugOutput)
 	// Wallet RPC instance will create a cert file when it is ready for incoming calls
-	pin.WaitForFile(Wallet.CertFile(), 7)
+	pin.WaitForFile(Wallet.CertFile(), 15)
 
 	fmt.Println("Connect to Wallet RPC...")
 	cfg := Wallet.RPCConnectionConfig()
@@ -213,7 +213,6 @@ func (Wallet *ConsoleWallet) Stop() {
 	pin.DeleteFile(Wallet.CertFile())
 	pin.DeleteFile(Wallet.KeyFile())
 
-	panic("")
 }
 
 // Dispose simply stops the Wallet process if running
