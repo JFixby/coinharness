@@ -51,13 +51,14 @@ type Wallet interface {
 	GetNewAddress(accountName string) (Address, error)
 	CreateNewAccount(accountName string) error
 	ValidateAddress(address Address) (*ValidateAddressResult, error)
-	GetBalance(accountName string) (CoinsAmount, error)
+	//GetBalance(accountName string) (CoinsAmount, error)
 }
 
 type ValidateAddressResult struct {
 	IsValid  bool
 	IsMine   bool
 	IsScript bool
+	Account  string
 }
 
 // TestWalletFactory produces a new Wallet instance
