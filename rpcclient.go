@@ -30,11 +30,10 @@ type RPCClient interface {
 	GetNewAddress(accountName string) (Address, error)
 	GetBuildVersion() (BuildVersion, error)
 	GetBestBlock() (Hash, int64, error)
-	ConfirmedBalance() CoinsAmount
 	ValidateAddress(address Address) (*ValidateAddressResult, error)
 	CreateNewAccount(accountName string) error
-	UnlockOutputs(inputs []InputTx)
-	GetBalance(accountName string) (CoinsAmount, error)
+	GetBalance(accountName string) (*GetBalanceResult, error)
+	//UnlockOutputs(inputs []InputTx)
 	CreateTransaction(args *CreateTransactionArgs) (CreatedTransactionTx, error)
 }
 

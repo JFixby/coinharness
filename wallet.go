@@ -29,7 +29,7 @@ type Wallet interface {
 	SyncedHeight() int64
 
 	// ConfirmedBalance returns wallet balance
-	ConfirmedBalance() CoinsAmount
+	GetBalance(accountName string) (*GetBalanceResult, error)
 
 	// CreateTransaction returns a fully signed transaction paying to the specified
 	// outputs while observing the desired fee rate. The passed fee rate should be
@@ -44,7 +44,7 @@ type Wallet interface {
 
 	// UnlockOutputs unlocks any outputs which were previously locked due to
 	// being selected to fund a transaction via the CreateTransaction method.
-	UnlockOutputs(inputs []InputTx)
+	UnlockOutputs(inputs []InputTx) error
 
 	// RPCClient returns node RPCConnection
 	RPCClient() *RPCConnection
@@ -52,14 +52,46 @@ type Wallet interface {
 	GetNewAddress(accountName string) (Address, error)
 	CreateNewAccount(accountName string) error
 	ValidateAddress(address Address) (*ValidateAddressResult, error)
-	//GetBalance(accountName string) (CoinsAmount, error)
+}
+
+type GetBalanceResult struct {
+	Balances                     []GetAccountBalanceResult
+	BlockHash                    Hash
+	TotalImmatureCoinbaseRewards CoinsAmount
+	TotalImmatureStakeGeneration CoinsAmount
+	TotalLockedByTickets         CoinsAmount
+	TotalSpendable               CoinsAmount
+	CumulativeTotal              CoinsAmount
+	TotalUnconfirmed             CoinsAmount
+	TotalVotingAuthority         CoinsAmount
+}
+
+// GetAccountBalanceResult models the account data from the getbalance command.
+type GetAccountBalanceResult struct {
+	AccountName             string
+	ImmatureCoinbaseRewards CoinsAmount
+	ImmatureStakeGeneration CoinsAmount
+	LockedByTickets         CoinsAmount
+	Spendable               CoinsAmount
+	Total                   CoinsAmount
+	Unconfirmed             CoinsAmount
+	VotingAuthority         CoinsAmount
 }
 
 type ValidateAddressResult struct {
-	IsValid  bool
-	IsMine   bool
-	IsScript bool
-	Account  string
+	IsValid      bool
+	Address      string
+	IsMine       bool
+	IsWatchOnly  bool
+	IsScript     bool
+	PubKeyAddr   string
+	PubKey       string
+	IsCompressed bool
+	Account      string
+	Addresses    []string
+	Hex          string
+	Script       string
+	SigsRequired int32
 }
 
 // TestWalletFactory produces a new Wallet instance

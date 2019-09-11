@@ -254,16 +254,12 @@ func (wallet *ConsoleWallet) SyncedHeight() int64 {
 	return h
 }
 
-func (wallet *ConsoleWallet) UnlockOutputs(inputs []coinharness.InputTx) {
-	wallet.rPCClient.Connection().UnlockOutputs(inputs)
-}
+//func (wallet *ConsoleWallet) UnlockOutputs(inputs []coinharness.InputTx) {
+//	wallet.rPCClient.Connection().UnlockOutputs(inputs)
+//}
 
 func (wallet *ConsoleWallet) CreateNewAccount(accountName string) error {
 	return wallet.rPCClient.Connection().CreateNewAccount(accountName)
-}
-
-func (wallet *ConsoleWallet) GetBalance(accountName string) (coinharness.CoinsAmount, error) {
-	return wallet.rPCClient.Connection().GetBalance(accountName)
 }
 
 func (wallet *ConsoleWallet) GetNewAddress(accountName string) (coinharness.Address, error) {
@@ -274,10 +270,14 @@ func (wallet *ConsoleWallet) ValidateAddress(address coinharness.Address) (*coin
 	return wallet.rPCClient.Connection().ValidateAddress(address)
 }
 
-func (wallet *ConsoleWallet) ConfirmedBalance() coinharness.CoinsAmount {
-	return wallet.rPCClient.Connection().ConfirmedBalance()
-}
-
 func (wallet *ConsoleWallet) CreateTransaction(args *coinharness.CreateTransactionArgs) (coinharness.CreatedTransactionTx, error) {
 	return wallet.rPCClient.Connection().CreateTransaction(args)
+}
+
+func (wallet *ConsoleWallet) GetBalance(accountName string) (*coinharness.GetBalanceResult, error) {
+	return wallet.rPCClient.Connection().GetBalance(accountName)
+}
+
+func (wallet *ConsoleWallet) UnlockOutputs(inputs []coinharness.InputTx) ( error) {
+	return fmt.Errorf("UnlockOutputs method is not supported")
 }
