@@ -239,16 +239,23 @@ func (wallet *ConsoleWallet) SendOutputs(args *coinharness.SendOutputsArgs) (coi
 }
 
 func (wallet *ConsoleWallet) Sync(desiredHeight int64) int64 {
+	attempt := 0
+	maxAttempt := 10
 	for wallet.SyncedHeight() < desiredHeight {
 		pin.Sleep(1000)
 		count := wallet.SyncedHeight()
 		fmt.Println("   sync to: " + strconv.FormatInt(count, 10))
+		attempt++
+		if maxAttempt <= attempt {
+
+		}
 	}
 	return wallet.SyncedHeight()
 }
 
 func (wallet *ConsoleWallet) SyncedHeight() int64 {
 	rpcClient := wallet.rPCClient.Connection()
+	//h, err := rpcClient.GetBlockCount()
 	_, h, err := rpcClient.GetBestBlock()
 	pin.CheckTestSetupMalfunction(err)
 	return h
