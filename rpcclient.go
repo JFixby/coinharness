@@ -35,6 +35,10 @@ type RPCClient interface {
 	GetBalance(accountName string) (*GetBalanceResult, error)
 	//UnlockOutputs(inputs []InputTx)
 	CreateTransaction(args *CreateTransactionArgs) (CreatedTransactionTx, error)
+
+	WalletUnlock(walletPassphrase string, timeout int64) error
+	WalletLock() error
+	WalletInfo() (*WalletInfoResult, error)
 }
 
 type PeerInfo struct {

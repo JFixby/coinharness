@@ -288,3 +288,15 @@ func (wallet *ConsoleWallet) GetBalance(accountName string) (*coinharness.GetBal
 func (wallet *ConsoleWallet) UnlockOutputs(inputs []coinharness.InputTx) ( error) {
 	return fmt.Errorf("UnlockOutputs method is not supported")
 }
+
+func (wallet *ConsoleWallet) WalletUnlock(walletPassphrase string, timeout int64) (error) {
+	return wallet.rPCClient.Connection().WalletUnlock(walletPassphrase, timeout)
+}
+
+func (wallet *ConsoleWallet) WalletLock() (error) {
+	return wallet.rPCClient.Connection().WalletLock()
+}
+
+func (wallet *ConsoleWallet) WalletInfo() (*coinharness.WalletInfoResult, error) {
+	return wallet.rPCClient.Connection().WalletInfo()
+}

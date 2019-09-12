@@ -211,3 +211,15 @@ func (node *ConsoleNode) Dispose() error {
 	}
 	return nil
 }
+
+func (c *ConsoleNode) WalletLock() error {
+	return c.rPCClient.Connection().WalletLock()
+}
+
+func (c *ConsoleNode) WalletInfo() (*coinharness.WalletInfoResult, error) {
+	return c.rPCClient.Connection().WalletInfo()
+}
+
+func (c *ConsoleNode) WalletUnlock(passphrase string, timeoutSecs int64) error {
+	return c.rPCClient.Connection().WalletUnlock(passphrase, timeoutSecs)
+}

@@ -50,8 +50,28 @@ type Wallet interface {
 	RPCClient() *RPCConnection
 
 	GetNewAddress(accountName string) (Address, error)
+
 	CreateNewAccount(accountName string) error
+
 	ValidateAddress(address Address) (*ValidateAddressResult, error)
+
+	WalletUnlock(password string, timeout int64) error
+
+	WalletLock() error
+
+	WalletInfo() (*WalletInfoResult, error)
+}
+
+type WalletInfoResult struct {
+	Unlocked         bool
+	DaemonConnected  bool
+	TxFee            float64
+	TicketFee        float64
+	TicketPurchasing bool
+	VoteBits         uint16
+	VoteBitsExtended string
+	VoteVersion      uint32
+	Voting           bool
 }
 
 type GetBalanceResult struct {
