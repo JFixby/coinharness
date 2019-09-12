@@ -229,9 +229,9 @@ func (wallet *ConsoleWallet) NewAddress(arg *coinharness.NewAddressArgs) (coinha
 		arg.Account = "default"
 	}
 	return wallet. //
-		RPCClient(). //
-		Connection(). //
-		GetNewAddress(arg.Account)
+			RPCClient().  //
+			Connection(). //
+			GetNewAddress(arg.Account)
 }
 
 func (wallet *ConsoleWallet) SendOutputs(args *coinharness.SendOutputsArgs) (coinharness.Hash, error) {
@@ -285,15 +285,15 @@ func (wallet *ConsoleWallet) GetBalance(accountName string) (*coinharness.GetBal
 	return wallet.rPCClient.Connection().GetBalance(accountName)
 }
 
-func (wallet *ConsoleWallet) UnlockOutputs(inputs []coinharness.InputTx) ( error) {
+func (wallet *ConsoleWallet) UnlockOutputs(inputs []coinharness.InputTx) error {
 	return fmt.Errorf("UnlockOutputs method is not supported")
 }
 
-func (wallet *ConsoleWallet) WalletUnlock(walletPassphrase string, timeout int64) (error) {
+func (wallet *ConsoleWallet) WalletUnlock(walletPassphrase string, timeout int64) error {
 	return wallet.rPCClient.Connection().WalletUnlock(walletPassphrase, timeout)
 }
 
-func (wallet *ConsoleWallet) WalletLock() (error) {
+func (wallet *ConsoleWallet) WalletLock() error {
 	return wallet.rPCClient.Connection().WalletLock()
 }
 
