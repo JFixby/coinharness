@@ -39,6 +39,13 @@ type RPCClient interface {
 	WalletUnlock(walletPassphrase string, timeout int64) error
 	WalletLock() error
 	WalletInfo() (*WalletInfoResult, error)
+	GetBlock(hash Hash) (Block, error)
+	SubmitBlock(block Block, ) error
+	LoadTxFilter(b bool, addresses []Address) error
+}
+
+type Block interface{
+	
 }
 
 type PeerInfo struct {
