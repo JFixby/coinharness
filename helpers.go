@@ -154,3 +154,14 @@ func AssertConnectedTo(t *testing.T, nodeA *Harness, nodeB *Harness) {
 		t.Fatal("nodeA not connected to nodeB")
 	}
 }
+
+// GenerateTestChain with the desired number of mature coinbase outputs
+func GenerateTestChain(numToGenerate int64, node RPCClient) error {
+	fmt.Printf("Generating %v blocks...\n", numToGenerate)
+	_, err := node.Generate(uint32(numToGenerate))
+	if err != nil {
+		return err
+	}
+	fmt.Println("Block generation complete.")
+	return nil
+}
