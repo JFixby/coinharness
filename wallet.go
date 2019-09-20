@@ -122,7 +122,7 @@ type TestWalletConfig struct {
 	NodeRPCPort   int
 	WalletRPCHost string
 	WalletRPCPort int
-	ActiveNet     ActiveNet
+	ActiveNet     Network
 	WorkingDir    string
 
 	NodeUser       string

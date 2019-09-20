@@ -43,7 +43,7 @@ type TestNodeFactory interface {
 
 // TestNodeConfig bundles settings required to create a new node instance
 type TestNodeConfig struct {
-	ActiveNet ActiveNet
+	ActiveNet Network
 
 	WorkingDir string
 

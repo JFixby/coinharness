@@ -2,6 +2,7 @@ package coinharness
 
 type Network interface {
 	CoinbaseMaturity() int64
+	Params() interface{}
 }
 
 type RPCConnectionConfig struct {
@@ -11,8 +12,6 @@ type RPCConnectionConfig struct {
 	Pass            string
 	CertificateFile string
 }
-
-type ActiveNet interface{}
 
 type Address interface {
 	String() string
