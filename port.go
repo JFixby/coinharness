@@ -1,4 +1,3 @@
-
 package coinharness
 
 // NetPortManager is used by the test setup to manage issuing

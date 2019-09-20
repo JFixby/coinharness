@@ -1,4 +1,3 @@
-
 package coinharness
 
 import (
@@ -36,12 +35,11 @@ type RPCClient interface {
 	WalletLock() error
 	WalletInfo() (*WalletInfoResult, error)
 	GetBlock(hash Hash) (Block, error)
-	SubmitBlock(block Block, ) error
+	SubmitBlock(block Block) error
 	LoadTxFilter(b bool, addresses []Address) error
 }
 
-type Block interface{
-	
+type Block interface {
 }
 
 type PeerInfo struct {
