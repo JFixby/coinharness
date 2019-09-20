@@ -1,6 +1,8 @@
 package coinharness
 
-type Network interface{}
+type Network interface {
+	CoinbaseMaturity() int64
+}
 
 type RPCConnectionConfig struct {
 	Host            string
