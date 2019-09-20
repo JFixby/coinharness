@@ -34,7 +34,7 @@ type OutputTx interface {
 	Value() int64
 }
 
-type CoinsAmount int64
+type CoinsAmount interface{}
 
 type CreatedTransactionTx interface {
 	Version() int32
