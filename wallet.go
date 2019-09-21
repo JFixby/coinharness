@@ -30,7 +30,7 @@ type Wallet interface {
 	// outputs while observing the desired fee rate. The passed fee rate should be
 	// expressed in satoshis-per-byte. The transaction being created can optionally
 	// include a change output indicated by the Change boolean.
-	CreateTransaction(args *CreateTransactionArgs) (CreatedTransactionTx, error)
+	CreateTransaction(args *CreateTransactionArgs) (*CreatedTransactionTx, error)
 
 	// SendOutputs creates, then sends a transaction paying to the specified output
 	// while observing the passed fee rate. The passed fee rate should be expressed
@@ -139,10 +139,13 @@ type SendOutputsArgs struct {
 // CreateTransactionArgs bundles CreateTransaction() arguments to minimize diff
 // in case a new argument for the function is added
 type CreateTransactionArgs struct {
-	Outputs   []OutputTx
-	FeeRate   CoinsAmount
-	Change    bool
-	TxVersion int32
+	Outputs         []*OutputTx
+	FeeRate         CoinsAmount
+	Change          bool
+	TxVersion       int32
+	PayToAddrScript func(Address) ([]byte, error)
+	TxSerializeSize func(*CreatedTransactionTx) int
+	Account         string
 }
 
 // NewAddressArgs bundles NewAddress() arguments to minimize diff

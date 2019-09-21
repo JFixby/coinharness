@@ -21,27 +21,42 @@ type Address interface {
 
 type Seed interface{}
 
-type InputTx interface {
-	PreviousOutPoint() OutPoint
+type InputTx struct {
+	PreviousOutPoint OutPoint
+	Amount           CoinsAmount
 }
 
-type OutPoint interface{}
+type OutPoint struct {
+	Hash  Hash
+	Index uint32
+	Tree  int8
+}
 
 type Hash interface{}
 
-type OutputTx interface {
-	PkScript() []byte
-	Value() int64
+type OutputTx struct {
+	PkScript []byte
+	Amount   CoinsAmount
 }
 
-type CoinsAmount interface{}
+type CoinsAmount struct {
+	AtomsValue int64
+}
 
-type CreatedTransactionTx interface {
-	Version() int32
-	TxIn() []InputTx
-	TxOut() []OutputTx
-	LockTime() uint32
-	TxHash() Hash
+func (a *CoinsAmount) ToCoins() float64 {
+	return float64(a.AtomsValue) / 1e8
+}
+
+func (a *CoinsAmount) Copy() CoinsAmount {
+	return CoinsAmount{a.AtomsValue}
+}
+
+type CreatedTransactionTx struct {
+	Version  int32
+	TxIn     []*InputTx
+	TxOut    []*OutputTx
+	LockTime uint32
+	TxHash   Hash
 }
 
 type AddNodeArguments struct {

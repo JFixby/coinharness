@@ -28,8 +28,9 @@ type RPCClient interface {
 	ValidateAddress(address Address) (*ValidateAddressResult, error)
 	CreateNewAccount(accountName string) error
 	GetBalance(accountName string) (*GetBalanceResult, error)
+	ListUnspent() ([]*Unspent, error)
 	//UnlockOutputs(inputs []InputTx)
-	CreateTransaction(args *CreateTransactionArgs) (CreatedTransactionTx, error)
+	//CreateTransaction(args *CreateTransactionArgs) (CreatedTransactionTx, error)
 
 	WalletUnlock(walletPassphrase string, timeout int64) error
 	WalletLock() error
@@ -37,6 +38,21 @@ type RPCClient interface {
 	GetBlock(hash Hash) (Block, error)
 	SubmitBlock(block Block) error
 	LoadTxFilter(b bool, addresses []Address) error
+}
+
+// Unspent models a successful response from the listunspent request.
+type Unspent struct {
+	TxID          string
+	Vout          uint32
+	Tree          int8
+	TxType        int
+	Address       string
+	Account       string
+	ScriptPubKey  string
+	RedeemScript  string
+	Amount        CoinsAmount
+	Confirmations int64
+	Spendable     bool
 }
 
 type Block interface {
