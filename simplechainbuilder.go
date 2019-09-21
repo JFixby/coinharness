@@ -2,7 +2,6 @@ package coinharness
 
 import (
 	"fmt"
-	"github.com/btcsuite/btcutil"
 	"github.com/jfixby/pin"
 	"github.com/jfixby/pin/commandline"
 	"strconv"
@@ -92,7 +91,7 @@ func DeploySimpleChain(testSetup *ChainWithMatureOutputsSpawner, h *Harness) {
 type launchArguments struct {
 	DebugNodeOutput      bool
 	DebugWalletOutput    bool
-	MiningAddress        *btcutil.Address
+	MiningAddress        Address
 	NodeExtraArguments   map[string]interface{}
 	WalletExtraArguments map[string]interface{}
 }
