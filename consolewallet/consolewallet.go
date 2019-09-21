@@ -261,10 +261,6 @@ func (wallet *ConsoleWallet) SyncedHeight() int64 {
 	return h
 }
 
-//func (wallet *ConsoleWallet) UnlockOutputs(inputs []coinharness.InputTx) {
-//	wallet.rPCClient.Connection().UnlockOutputs(inputs)
-//}
-
 func (wallet *ConsoleWallet) CreateNewAccount(accountName string) error {
 	return wallet.rPCClient.Connection().CreateNewAccount(accountName)
 }
@@ -275,123 +271,6 @@ func (wallet *ConsoleWallet) GetNewAddress(accountName string) (coinharness.Addr
 
 func (wallet *ConsoleWallet) ValidateAddress(address coinharness.Address) (*coinharness.ValidateAddressResult, error) {
 	return wallet.rPCClient.Connection().ValidateAddress(address)
-}
-
-func (wallet *ConsoleWallet) CreateTransaction(args *coinharness.CreateTransactionArgs) (*coinharness.CreatedTransactionTx, error) {
-	unspent, err := wallet.rPCClient.Connection().ListUnspent()
-	if err != nil {
-		return nil, err
-	}
-
-	tx := &coinharness.CreatedTransactionTx{}
-
-	// Tally up the total amount to be sent in order to perform coin
-	// selection shortly below.
-	outputAmt := coinharness.CoinsAmount{0}
-	for _, output := range args.Outputs {
-		outputAmt.AtomsValue += output.Amount.AtomsValue
-		tx.TxOut = append(tx.TxOut, output)
-	}
-
-	// Attempt to fund the transaction with spendable utxos.
-	if err := fundTx(
-		wallet,
-		args.Account,
-		unspent,
-		tx,
-		outputAmt,
-		args.FeeRate,
-		args.PayToAddrScript,
-		args.TxSerializeSize,
-	); err != nil {
-		return nil, err
-	}
-
-	return tx, nil
-}
-
-// fundTx attempts to fund a transaction sending amt coins.  The coins are
-// selected such that the final amount spent pays enough fees as dictated by
-// the passed fee rate.  The passed fee rate should be expressed in
-// atoms-per-byte.
-//
-// NOTE: The InMemoryWallet's mutex must be held when this function is called.
-func fundTx(
-	wallet *ConsoleWallet,
-	account string,
-	unspent []*coinharness.Unspent,
-	tx *coinharness.CreatedTransactionTx,
-	amt coinharness.CoinsAmount,
-	feeRate coinharness.CoinsAmount,
-	PayToAddrScript func(coinharness.Address) ([]byte, error),
-	TxSerializeSize func(*coinharness.CreatedTransactionTx) int,
-) error {
-	const (
-		// spendSize is the largest number of bytes of a sigScript
-		// which spends a p2pkh output: OP_DATA_73 <sig> OP_DATA_33 <pubkey>
-		spendSize = 1 + 73 + 1 + 33
-	)
-
-	amtSelected := coinharness.CoinsAmount{0}
-	//txSize := int64(0)
-	for _, output := range unspent {
-		// Skip any outputs that are still currently immature or are
-		// currently locked.
-		if !output.Spendable {
-			continue
-		}
-		if output.Account != account {
-			continue
-		}
-
-		amtSelected.AtomsValue += output.Amount.AtomsValue
-
-		// Add the selected output to the transaction, updating the
-		// current tx size while accounting for the size of the future
-		// sigScript.
-		txIn := &coinharness.InputTx{
-			PreviousOutPoint: coinharness.OutPoint{
-				Tree: output.Tree,
-			},
-			Amount: output.Amount.Copy(),
-		}
-		tx.TxIn = append(tx.TxIn, txIn)
-
-		txSize := TxSerializeSize(tx) + spendSize*len(tx.TxIn)
-
-		// Calculate the fee required for the txn at this point
-		// observing the specified fee rate. If we don't have enough
-		// coins from he current amount selected to pay the fee, then
-		// continue to grab more coins.
-		reqFee := coinharness.CoinsAmount{int64(txSize) * feeRate.AtomsValue}
-		if amtSelected.AtomsValue-reqFee.AtomsValue < amt.AtomsValue {
-			continue
-		}
-
-		// If we have any change left over, then add an additional
-		// output to the transaction reserved for change.
-		changeVal := coinharness.CoinsAmount{amtSelected.AtomsValue - amt.AtomsValue - reqFee.AtomsValue}
-		if changeVal.AtomsValue > 0 {
-			addr, err := wallet.GetNewAddress(account)
-			if err != nil {
-				return err
-			}
-			pkScript, err := PayToAddrScript(addr)
-			if err != nil {
-				return err
-			}
-			changeOutput := &coinharness.OutputTx{
-				Amount:   changeVal,
-				PkScript: pkScript,
-			}
-			tx.TxOut = append(tx.TxOut, changeOutput)
-		}
-		return nil
-	}
-
-	// If we've reached this point, then coin selection failed due to an
-	// insufficient amount of coins.
-	return fmt.Errorf("not enough funds for coin selection")
 }
 
 func (wallet *ConsoleWallet) GetBalance(accountName string) (*coinharness.GetBalanceResult, error) {
