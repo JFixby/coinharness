@@ -175,7 +175,7 @@ func GenSpend(
 	TxSerializeSize func(*MessageTx) int,
 ) Hash {
 	// Grab a fresh address from the wallet.
-	addr, err := r.Wallet.NewAddress(&NewAddressArgs{"default"})
+	addr, err := r.Wallet.NewAddress(DefaultAccountName)
 	if err != nil {
 		t.Fatalf("unable to get new address: %v", err)
 	}

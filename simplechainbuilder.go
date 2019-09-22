@@ -38,7 +38,7 @@ func DeploySimpleChain(testSetup *ChainWithMatureOutputsSpawner, h *Harness) {
 	var err error
 	{
 		for {
-			address, err = h.Wallet.NewAddress(nil)
+			address, err = h.Wallet.NewAddress(DefaultAccountName)
 			if err != nil {
 				pin.D("address", address)
 				pin.D("error", err)

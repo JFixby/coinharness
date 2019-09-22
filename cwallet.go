@@ -222,20 +222,11 @@ func (wallet *ConsoleWallet) Dispose() error {
 	return nil
 }
 
-func (wallet *ConsoleWallet) NewAddress(arg *NewAddressArgs) (Address, error) {
-	//if arg == nil {
-	//	arg = &NewAddressArgs{}
-	//	arg.Account = "default"
-	//}
-
-	pin.AssertNotNil("arg", arg)
-	pin.AssertNotNil("arg.Account", arg.Account)
-	pin.AssertNotEmpty("arg.Account", arg.Account)
-
+func (wallet *ConsoleWallet) NewAddress(accountName string) (Address, error) {
 	return wallet. //
 		RPCClient(). //
 		Connection(). //
-		GetNewAddress(arg.Account)
+		GetNewAddress(accountName)
 }
 
 func (wallet *ConsoleWallet) Sync(desiredHeight int64) int64 {

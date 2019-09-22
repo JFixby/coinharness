@@ -11,7 +11,7 @@ type Wallet interface {
 	Network() Network
 
 	// NewAddress returns a fresh address spendable by the wallet.
-	NewAddress(args *NewAddressArgs) (Address, error)
+	NewAddress(accountName string) (Address, error)
 
 	// Start wallet process
 	Start(args *TestWalletStartArgs) error
@@ -49,6 +49,8 @@ type Wallet interface {
 	WalletInfo() (*WalletInfoResult, error)
 	ListAccounts() (map[string]CoinsAmount, error)
 }
+
+const DefaultAccountName = "default"
 
 type WalletInfoResult struct {
 	Unlocked         bool
@@ -134,12 +136,6 @@ type CreateTransactionArgs struct {
 	PayToAddrScript func(Address) ([]byte, error) // txscript.PayToAddrScript(addr)
 	TxSerializeSize func(*MessageTx) int          // *wire.MsgTx.TxSerializeSize()
 	Account         string
-}
-
-// NewAddressArgs bundles NewAddress() arguments to minimize diff
-// in case a new argument for the function is added
-type NewAddressArgs struct {
-	Account string
 }
 
 // TestWalletStartArgs bundles Start() arguments to minimize diff
