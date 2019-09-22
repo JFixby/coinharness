@@ -202,6 +202,7 @@ func fundTx(
 
 	pin.AssertNotNil("PayToAddrScript", PayToAddrScript)
 	pin.AssertNotNil("TxSerializeSize", TxSerializeSize)
+	pin.AssertNotEmpty("account", account)
 
 	amtSelected := CoinsAmount{0}
 	//txSize := int64(0)
@@ -235,7 +236,8 @@ func fundTx(
 		// coins from he current amount selected to pay the fee, then
 		// continue to grab more coins.
 		reqFee := CoinsAmount{int64(txSize) * feeRate.AtomsValue}
-		if amtSelected.AtomsValue-reqFee.AtomsValue < amt.AtomsValue {
+		collected := amtSelected.AtomsValue - reqFee.AtomsValue
+		if collected < amt.AtomsValue {
 			continue
 		}
 
