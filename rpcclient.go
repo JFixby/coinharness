@@ -27,7 +27,7 @@ type RPCClient interface {
 	GetBestBlock() (Hash, int64, error)
 	ValidateAddress(address Address) (*ValidateAddressResult, error)
 	CreateNewAccount(accountName string) error
-	GetBalance(accountName string) (*GetBalanceResult, error)
+	GetBalance() (*GetBalanceResult, error)
 	ListUnspent() ([]*Unspent, error)
 
 	WalletUnlock(walletPassphrase string, timeout int64) error

@@ -264,8 +264,8 @@ func (wallet *ConsoleWallet) ValidateAddress(address Address) (*ValidateAddressR
 	return wallet.rPCClient.Connection().ValidateAddress(address)
 }
 
-func (wallet *ConsoleWallet) GetBalance(accountName string) (*GetBalanceResult, error) {
-	return wallet.rPCClient.Connection().GetBalance(accountName)
+func (wallet *ConsoleWallet) GetBalance() (*GetBalanceResult, error) {
+	return wallet.rPCClient.Connection().GetBalance()
 }
 
 func (wallet *ConsoleWallet) WalletUnlock(walletPassphrase string, timeout int64) error {

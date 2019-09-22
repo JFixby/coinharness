@@ -5,7 +5,7 @@ import (
 )
 
 func GetBalance(t *testing.T, w Wallet) *GetBalanceResult {
-	b, e := w.GetBalance("")
+	b, e := w.GetBalance()
 	if e != nil {
 		t.Fatalf("GetBalance error: %v", e)
 	}
