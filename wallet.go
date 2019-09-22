@@ -35,10 +35,6 @@ type Wallet interface {
 	// in satoshis-per-byte.
 	SendOutputs(args *SendOutputsArgs) (Hash, error)
 
-	// UnlockOutputs unlocks any outputs which were previously locked due to
-	// being selected to fund a transaction via the CreateTransaction method.
-	UnlockOutputs(inputs []*InputTx) error
-
 	// RPCClient returns node RPCConnection
 	RPCClient() *RPCConnection
 

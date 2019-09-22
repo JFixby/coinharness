@@ -29,8 +29,6 @@ type RPCClient interface {
 	CreateNewAccount(accountName string) error
 	GetBalance(accountName string) (*GetBalanceResult, error)
 	ListUnspent() ([]*Unspent, error)
-	//UnlockOutputs(inputs []InputTx)
-	//CreateTransaction(args *CreateTransactionArgs) (CreatedTransactionTx, error)
 
 	WalletUnlock(walletPassphrase string, timeout int64) error
 	WalletLock() error
