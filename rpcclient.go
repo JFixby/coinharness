@@ -54,7 +54,7 @@ type Unspent struct {
 }
 
 type Block interface {
-	Transactions()  []*MessageTx
+	Transactions() []*MessageTx
 }
 
 type PeerInfo struct {
