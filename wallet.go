@@ -1,6 +1,9 @@
 package coinharness
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/jfixby/pin"
+)
 
 // Wallet wraps optional test wallet implementations for different test setups
 type Wallet interface {
@@ -216,6 +219,9 @@ func fundTx(
 		// which spends a p2pkh output: OP_DATA_73 <sig> OP_DATA_33 <pubkey>
 		spendSize = 1 + 73 + 1 + 33
 	)
+
+	pin.AssertNotNil("PayToAddrScript", PayToAddrScript)
+	pin.AssertNotNil("TxSerializeSize", TxSerializeSize)
 
 	amtSelected := CoinsAmount{0}
 	//txSize := int64(0)
