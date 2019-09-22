@@ -35,6 +35,7 @@ type OutPoint struct {
 type Hash interface{}
 
 type TxOut struct {
+	Version  uint16
 	PkScript []byte
 	Amount   CoinsAmount
 }

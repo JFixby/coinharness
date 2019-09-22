@@ -37,7 +37,7 @@ type Wallet interface {
 
 	// UnlockOutputs unlocks any outputs which were previously locked due to
 	// being selected to fund a transaction via the CreateTransaction method.
-	UnlockOutputs(inputs []InputTx) error
+	UnlockOutputs(inputs []*InputTx) error
 
 	// RPCClient returns node RPCConnection
 	RPCClient() *RPCConnection
