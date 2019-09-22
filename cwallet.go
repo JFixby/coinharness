@@ -1,8 +1,7 @@
-package consolewallet
+package coinharness
 
 import (
 	"fmt"
-	"github.com/jfixby/coinharness"
 	"github.com/jfixby/pin"
 	"github.com/jfixby/pin/commandline"
 	"net"
@@ -11,12 +10,12 @@ import (
 )
 
 type NewConsoleWalletArgs struct {
-	ClientFac                    coinharness.RPCClientFactory
-	ConsoleCommandCook           ConsoleCommandCook
+	ClientFac                    RPCClientFactory
+	ConsoleCommandCook           ConsoleCommandWalletCook
 	WalletExecutablePathProvider commandline.ExecutablePathProvider
 
 	AppDir    string
-	ActiveNet coinharness.Network
+	ActiveNet Network
 
 	NodeRPCHost string
 	NodeRPCPort int
@@ -52,7 +51,7 @@ func NewConsoleWallet(args *NewConsoleWalletArgs) *ConsoleWallet {
 		NodeRpcPass:                  args.NodePass,
 		appDir:                       args.AppDir,
 		endpoint:                     "ws",
-		rPCClient:                    &coinharness.RPCConnection{MaxConnRetries: 20, RPCClientFactory: args.ClientFac},
+		rPCClient:                    &RPCConnection{MaxConnRetries: 20, RPCClientFactory: args.ClientFac},
 		WalletExecutablePathProvider: args.WalletExecutablePathProvider,
 		network:                      args.ActiveNet,
 		ConsoleCommandCook:           args.ConsoleCommandCook,
@@ -80,14 +79,14 @@ type ConsoleWallet struct {
 
 	externalProcess commandline.ExternalProcess
 
-	rPCClient *coinharness.RPCConnection
+	rPCClient *RPCConnection
 
-	network coinharness.Network
+	network Network
 
-	ConsoleCommandCook ConsoleCommandCook
+	ConsoleCommandCook ConsoleCommandWalletCook
 }
 
-type ConsoleCommandParams struct {
+type ConsoleCommandWalletParams struct {
 	ExtraArguments map[string]interface{}
 	NodeRpcUser    string
 	NodeRpcPass    string
@@ -100,16 +99,12 @@ type ConsoleCommandParams struct {
 	CertFile       string
 	NodeCertFile   string
 	KeyFile        string
-	Network        coinharness.Network
-}
-
-type ConsoleCommandCook interface {
-	CookArguments(par *ConsoleCommandParams) map[string]interface{}
+	Network        Network
 }
 
 // RPCConnectionConfig produces a new connection config instance for RPC client
-func (wallet *ConsoleWallet) RPCConnectionConfig() coinharness.RPCConnectionConfig {
-	return coinharness.RPCConnectionConfig{
+func (wallet *ConsoleWallet) RPCConnectionConfig() RPCConnectionConfig {
+	return RPCConnectionConfig{
 		Host:            wallet.walletRpcListener,
 		Endpoint:        wallet.endpoint,
 		User:            wallet.WalletRpcUser,
@@ -125,7 +120,7 @@ func (wallet *ConsoleWallet) FullConsoleCommand() string {
 }
 
 // RPCClient returns Wallet RPCConnection
-func (wallet *ConsoleWallet) RPCClient() *coinharness.RPCConnection {
+func (wallet *ConsoleWallet) RPCClient() *RPCConnection {
 	return wallet.rPCClient
 }
 
@@ -140,7 +135,7 @@ func (wallet *ConsoleWallet) KeyFile() string {
 }
 
 // Network returns current network of the Wallet
-func (wallet *ConsoleWallet) Network() coinharness.Network {
+func (wallet *ConsoleWallet) Network() Network {
 	return wallet.network
 }
 
@@ -151,7 +146,7 @@ func (wallet *ConsoleWallet) IsRunning() bool {
 
 // Start Wallet process. Deploys working dir, launches dcrd using command-line,
 // connects RPC client to the wallet.
-func (wallet *ConsoleWallet) Start(args *coinharness.TestWalletStartArgs) error {
+func (wallet *ConsoleWallet) Start(args *TestWalletStartArgs) error {
 	if wallet.IsRunning() {
 		pin.ReportTestSetupMalfunction(fmt.Errorf("ConsoleWallet is already running"))
 	}
@@ -161,7 +156,7 @@ func (wallet *ConsoleWallet) Start(args *coinharness.TestWalletStartArgs) error 
 	exec := wallet.WalletExecutablePathProvider.Executable()
 	wallet.externalProcess.CommandName = exec
 
-	consoleCommandParams := &ConsoleCommandParams{
+	consoleCommandParams := &ConsoleCommandWalletParams{
 		ExtraArguments: args.ExtraArguments,
 		NodeRpcUser:    wallet.NodeRpcUser,
 		NodeRpcPass:    wallet.NodeRpcPass,
@@ -190,6 +185,10 @@ func (wallet *ConsoleWallet) Start(args *coinharness.TestWalletStartArgs) error 
 	fmt.Println("Wallet RPC client connected.")
 
 	return nil
+}
+
+type ConsoleCommandWalletCook interface {
+	CookArguments(par *ConsoleCommandWalletParams) map[string]interface{}
 }
 
 // Stop interrupts the running Wallet process.
@@ -223,9 +222,9 @@ func (wallet *ConsoleWallet) Dispose() error {
 	return nil
 }
 
-func (wallet *ConsoleWallet) NewAddress(arg *coinharness.NewAddressArgs) (coinharness.Address, error) {
+func (wallet *ConsoleWallet) NewAddress(arg *NewAddressArgs) (Address, error) {
 	if arg == nil {
-		arg = &coinharness.NewAddressArgs{}
+		arg = &NewAddressArgs{}
 		arg.Account = "default"
 	}
 	return wallet. //
@@ -261,15 +260,15 @@ func (wallet *ConsoleWallet) CreateNewAccount(accountName string) error {
 	return wallet.rPCClient.Connection().CreateNewAccount(accountName)
 }
 
-func (wallet *ConsoleWallet) GetNewAddress(accountName string) (coinharness.Address, error) {
+func (wallet *ConsoleWallet) GetNewAddress(accountName string) (Address, error) {
 	return wallet.rPCClient.Connection().GetNewAddress(accountName)
 }
 
-func (wallet *ConsoleWallet) ValidateAddress(address coinharness.Address) (*coinharness.ValidateAddressResult, error) {
+func (wallet *ConsoleWallet) ValidateAddress(address Address) (*ValidateAddressResult, error) {
 	return wallet.rPCClient.Connection().ValidateAddress(address)
 }
 
-func (wallet *ConsoleWallet) GetBalance(accountName string) (*coinharness.GetBalanceResult, error) {
+func (wallet *ConsoleWallet) GetBalance(accountName string) (*GetBalanceResult, error) {
 	return wallet.rPCClient.Connection().GetBalance(accountName)
 }
 
@@ -281,10 +280,10 @@ func (wallet *ConsoleWallet) WalletLock() error {
 	return wallet.rPCClient.Connection().WalletLock()
 }
 
-func (wallet *ConsoleWallet) ListUnspent() ([]*coinharness.Unspent, error) {
+func (wallet *ConsoleWallet) ListUnspent() ([]*Unspent, error) {
 	return wallet.rPCClient.Connection().ListUnspent()
 }
 
-func (wallet *ConsoleWallet) WalletInfo() (*coinharness.WalletInfoResult, error) {
+func (wallet *ConsoleWallet) WalletInfo() (*WalletInfoResult, error) {
 	return wallet.rPCClient.Connection().WalletInfo()
 }

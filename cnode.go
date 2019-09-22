@@ -1,8 +1,7 @@
-package consolenode
+package coinharness
 
 import (
 	"fmt"
-	"github.com/jfixby/coinharness"
 	"github.com/jfixby/pin"
 	"github.com/jfixby/pin/commandline"
 	"net"
@@ -11,13 +10,13 @@ import (
 )
 
 type NewConsoleNodeArgs struct {
-	ClientFac                  coinharness.RPCClientFactory
-	ConsoleCommandCook         ConsoleCommandCook
+	ClientFac                  RPCClientFactory
+	ConsoleCommandCook         ConsoleCommandNodeCook
 	NodeExecutablePathProvider commandline.ExecutablePathProvider
 	RpcUser                    string
 	RpcPass                    string
 	AppDir                     string
-	ActiveNet                  coinharness.Network
+	ActiveNet                  Network
 	P2PHost                    string
 	NodeRPCHost                string
 	P2PPort                    int
@@ -36,7 +35,7 @@ func NewConsoleNode(args *NewConsoleNodeArgs) *ConsoleNode {
 		rpcPass:                    args.RpcPass,
 		appDir:                     args.AppDir,
 		endpoint:                   "ws",
-		rPCClient:                  &coinharness.RPCConnection{MaxConnRetries: 20, RPCClientFactory: args.ClientFac},
+		rPCClient:                  &RPCConnection{MaxConnRetries: 20, RPCClientFactory: args.ClientFac},
 		NodeExecutablePathProvider: args.NodeExecutablePathProvider,
 		network:                    args.ActiveNet,
 		ConsoleCommandCook:         args.ConsoleCommandCook,
@@ -62,14 +61,14 @@ type ConsoleNode struct {
 
 	externalProcess commandline.ExternalProcess
 
-	rPCClient *coinharness.RPCConnection
+	rPCClient *RPCConnection
 
-	network coinharness.Network
+	network Network
 
-	ConsoleCommandCook ConsoleCommandCook
+	ConsoleCommandCook ConsoleCommandNodeCook
 }
 
-type ConsoleCommandParams struct {
+type ConsoleCommandNodeParams struct {
 	ExtraArguments map[string]interface{}
 	RpcUser        string
 	RpcPass        string
@@ -81,23 +80,23 @@ type ConsoleCommandParams struct {
 	Profile        string
 	CertFile       string
 	KeyFile        string
-	MiningAddress  coinharness.Address
-	Network        coinharness.Network
-}
-
-type ConsoleCommandCook interface {
-	CookArguments(par *ConsoleCommandParams) map[string]interface{}
+	MiningAddress  Address
+	Network        Network
 }
 
 // RPCConnectionConfig produces a new connection config instance for RPC client
-func (node *ConsoleNode) RPCConnectionConfig() coinharness.RPCConnectionConfig {
-	return coinharness.RPCConnectionConfig{
+func (node *ConsoleNode) RPCConnectionConfig() RPCConnectionConfig {
+	return RPCConnectionConfig{
 		Host:            node.rpcListen,
 		Endpoint:        node.endpoint,
 		User:            node.rpcUser,
 		Pass:            node.rpcPass,
 		CertificateFile: node.CertFile(),
 	}
+}
+
+type ConsoleCommandNodeCook interface {
+	CookArguments(par *ConsoleCommandNodeParams) map[string]interface{}
 }
 
 // FullConsoleCommand returns the full console command used to
@@ -112,7 +111,7 @@ func (node *ConsoleNode) P2PAddress() string {
 }
 
 // RPCClient returns node RPCConnection
-func (node *ConsoleNode) RPCClient() *coinharness.RPCConnection {
+func (node *ConsoleNode) RPCClient() *RPCConnection {
 	return node.rPCClient
 }
 
@@ -127,7 +126,7 @@ func (node *ConsoleNode) KeyFile() string {
 }
 
 // Network returns current network of the node
-func (node *ConsoleNode) Network() coinharness.Network {
+func (node *ConsoleNode) Network() Network {
 	return node.network
 }
 
@@ -138,7 +137,7 @@ func (node *ConsoleNode) IsRunning() bool {
 
 // Start node process. Deploys working dir, launches dcrd using command-line,
 // connects RPC client to the node.
-func (node *ConsoleNode) Start(args *coinharness.StartNodeArgs) {
+func (node *ConsoleNode) Start(args *StartNodeArgs) {
 	if node.IsRunning() {
 		pin.ReportTestSetupMalfunction(fmt.Errorf("ConsoleNode is already running"))
 	}
@@ -148,7 +147,7 @@ func (node *ConsoleNode) Start(args *coinharness.StartNodeArgs) {
 	exec := node.NodeExecutablePathProvider.Executable()
 	node.externalProcess.CommandName = exec
 
-	consoleCommandParams := &ConsoleCommandParams{
+	consoleCommandParams := &ConsoleCommandNodeParams{
 		ExtraArguments: args.ExtraArguments,
 		RpcUser:        node.rpcUser,
 		RpcPass:        node.rpcPass,
@@ -211,7 +210,7 @@ func (c *ConsoleNode) WalletLock() error {
 	return c.rPCClient.Connection().WalletLock()
 }
 
-func (c *ConsoleNode) WalletInfo() (*coinharness.WalletInfoResult, error) {
+func (c *ConsoleNode) WalletInfo() (*WalletInfoResult, error) {
 	return c.rPCClient.Connection().WalletInfo()
 }
 
