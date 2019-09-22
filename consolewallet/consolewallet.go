@@ -234,10 +234,6 @@ func (wallet *ConsoleWallet) NewAddress(arg *coinharness.NewAddressArgs) (coinha
 			GetNewAddress(arg.Account)
 }
 
-func (wallet *ConsoleWallet) SendOutputs(args *coinharness.SendOutputsArgs) (coinharness.Hash, error) {
-	panic("")
-}
-
 func (wallet *ConsoleWallet) Sync(desiredHeight int64) int64 {
 	attempt := 0
 	maxAttempt := 10

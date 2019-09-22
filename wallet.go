@@ -33,11 +33,6 @@ type Wallet interface {
 	// ConfirmedBalance returns wallet balance
 	GetBalance(accountName string) (*GetBalanceResult, error)
 
-	// SendOutputs creates, then sends a transaction paying to the specified output
-	// while observing the passed fee rate. The passed fee rate should be expressed
-	// in satoshis-per-byte.
-	SendOutputs(args *SendOutputsArgs) (Hash, error)
-
 	// RPCClient returns node RPCConnection
 	RPCClient() *RPCConnection
 
@@ -126,11 +121,6 @@ type TestWalletConfig struct {
 	NodePassword   string
 	WalletUser     string
 	WalletPassword string
-}
-
-type SendOutputsArgs struct {
-	Outputs []*TxOut
-	FeeRate CoinsAmount
 }
 
 // CreateTransactionArgs bundles CreateTransaction() arguments to minimize diff
