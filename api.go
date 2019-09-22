@@ -34,7 +34,7 @@ type OutPoint struct {
 
 type Hash interface{}
 
-type OutputTx struct {
+type TxOut struct {
 	PkScript []byte
 	Amount   CoinsAmount
 }
@@ -59,12 +59,19 @@ func (a *CoinsAmount) Copy() CoinsAmount {
 	return CoinsAmount{a.AtomsValue}
 }
 
-type CreatedTransactionTx struct {
+type MessageTx struct {
 	Version  int32
 	TxIn     []*InputTx
-	TxOut    []*OutputTx
+	TxOut    []*TxOut
 	LockTime uint32
 	TxHash   Hash
+}
+
+type Tx struct {
+	Hash    Hash // Cached transaction hash
+	MsgTx   *MessageTx    // Underlying MsgTx
+	TxTree  int8           // Indicates which tx tree the tx is found in
+	TxIndex int            // Position within a block or TxIndexUnknown
 }
 
 type AddNodeArguments struct {
