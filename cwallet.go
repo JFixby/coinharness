@@ -223,14 +223,19 @@ func (wallet *ConsoleWallet) Dispose() error {
 }
 
 func (wallet *ConsoleWallet) NewAddress(arg *NewAddressArgs) (Address, error) {
-	if arg == nil {
-		arg = &NewAddressArgs{}
-		arg.Account = "default"
-	}
+	//if arg == nil {
+	//	arg = &NewAddressArgs{}
+	//	arg.Account = "default"
+	//}
+
+	pin.AssertNotNil("arg", arg)
+	pin.AssertNotNil("arg.Account", arg.Account)
+	pin.AssertNotEmpty("arg.Account", arg.Account)
+
 	return wallet. //
-			RPCClient().  //
-			Connection(). //
-			GetNewAddress(arg.Account)
+		RPCClient(). //
+		Connection(). //
+		GetNewAddress(arg.Account)
 }
 
 func (wallet *ConsoleWallet) Sync(desiredHeight int64) int64 {
@@ -286,4 +291,8 @@ func (wallet *ConsoleWallet) ListUnspent() ([]*Unspent, error) {
 
 func (wallet *ConsoleWallet) WalletInfo() (*WalletInfoResult, error) {
 	return wallet.rPCClient.Connection().WalletInfo()
+}
+
+func (wallet *ConsoleWallet) ListAccounts() (map[string]CoinsAmount, error) {
+	return wallet.rPCClient.Connection().ListAccounts()
 }

@@ -47,6 +47,7 @@ type Wallet interface {
 	WalletLock() error
 
 	WalletInfo() (*WalletInfoResult, error)
+	ListAccounts() (map[string]CoinsAmount, error)
 }
 
 type WalletInfoResult struct {

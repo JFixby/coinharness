@@ -36,6 +36,7 @@ type RPCClient interface {
 	GetBlock(hash Hash) (*MsgBlock, error)
 	SubmitBlock(block Block) error
 	LoadTxFilter(b bool, addresses []Address) error
+	ListAccounts() (map[string]CoinsAmount, error)
 }
 
 // Unspent models a successful response from the listunspent request.
