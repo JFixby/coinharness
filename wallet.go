@@ -130,19 +130,19 @@ type TestWalletConfig struct {
 }
 
 type SendOutputsArgs struct {
-	Outputs []OutputTx
+	Outputs []TxOut
 	FeeRate CoinsAmount
 }
 
 // CreateTransactionArgs bundles CreateTransaction() arguments to minimize diff
 // in case a new argument for the function is added
 type CreateTransactionArgs struct {
-	Outputs         []*OutputTx
+	Outputs         []*TxOut
 	FeeRate         CoinsAmount
 	Change          bool
 	TxVersion       int32
 	PayToAddrScript func(Address) ([]byte, error)
-	TxSerializeSize func(*CreatedTransactionTx) int
+	TxSerializeSize func(*MessageTx) int
 	Account         string
 }
 
@@ -166,13 +166,13 @@ type TestWalletStartArgs struct {
 // outputs while observing the desired fee rate. The passed fee rate should be
 // expressed in satoshis-per-byte. The transaction being created can optionally
 // include a change output indicated by the Change boolean.
-func CreateTransaction(wallet Wallet, args *CreateTransactionArgs) (*CreatedTransactionTx, error) {
+func CreateTransaction(wallet Wallet, args *CreateTransactionArgs) (*MessageTx, error) {
 	unspent, err := wallet.ListUnspent()
 	if err != nil {
 		return nil, err
 	}
 
-	tx := &CreatedTransactionTx{}
+	tx := &MessageTx{}
 
 	// Tally up the total amount to be sent in order to perform coin
 	// selection shortly below.
@@ -209,11 +209,11 @@ func fundTx(
 	wallet Wallet,
 	account string,
 	unspent []*Unspent,
-	tx *CreatedTransactionTx,
+	tx *MessageTx,
 	amt CoinsAmount,
 	feeRate CoinsAmount,
 	PayToAddrScript func(Address) ([]byte, error),
-	TxSerializeSize func(*CreatedTransactionTx) int,
+	TxSerializeSize func(*MessageTx) int,
 ) error {
 	const (
 		// spendSize is the largest number of bytes of a sigScript
@@ -269,7 +269,7 @@ func fundTx(
 			if err != nil {
 				return err
 			}
-			changeOutput := &OutputTx{
+			changeOutput := &TxOut{
 				Amount:   changeVal,
 				PkScript: pkScript,
 			}
