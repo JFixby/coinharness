@@ -65,7 +65,7 @@ type WalletInfoResult struct {
 }
 
 type GetBalanceResult struct {
-	Balances                     []GetAccountBalanceResult
+	Balances                     map[string]GetAccountBalanceResult
 	BlockHash                    Hash
 }
 
