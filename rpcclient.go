@@ -21,7 +21,7 @@ type RPCClient interface {
 	AddNode(arguments *AddNodeArguments) error
 	Internal() interface{}
 	Generate(blocks uint32) ([]Hash, error)
-	SendRawTransaction(tx CreatedTransactionTx, b bool) (Hash, error)
+	SendRawTransaction(tx MessageTx, b bool) (Hash, error)
 	GetNewAddress(accountName string) (Address, error)
 	GetBuildVersion() (BuildVersion, error)
 	GetBestBlock() (Hash, int64, error)
