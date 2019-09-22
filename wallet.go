@@ -31,7 +31,7 @@ type Wallet interface {
 	ListUnspent() ([]*Unspent, error)
 
 	// ConfirmedBalance returns wallet balance
-	GetBalance(accountName string) (*GetBalanceResult, error)
+	GetBalance() (*GetBalanceResult, error)
 
 	// RPCClient returns node RPCConnection
 	RPCClient() *RPCConnection
