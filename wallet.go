@@ -67,13 +67,6 @@ type WalletInfoResult struct {
 type GetBalanceResult struct {
 	Balances                     []GetAccountBalanceResult
 	BlockHash                    Hash
-	TotalImmatureCoinbaseRewards CoinsAmount
-	TotalImmatureStakeGeneration CoinsAmount
-	TotalLockedByTickets         CoinsAmount
-	TotalSpendable               CoinsAmount
-	CumulativeTotal              CoinsAmount
-	TotalUnconfirmed             CoinsAmount
-	TotalVotingAuthority         CoinsAmount
 }
 
 // GetAccountBalanceResult models the account data from the getbalance command.
