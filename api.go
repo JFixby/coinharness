@@ -43,8 +43,16 @@ type CoinsAmount struct {
 	AtomsValue int64
 }
 
+func CoinsAmountFromFloat(coinsFloat float64) CoinsAmount {
+	return CoinsAmount{int64(coinsFloat * 1e8)}
+}
+
 func (a *CoinsAmount) ToCoins() float64 {
 	return float64(a.AtomsValue) / 1e8
+}
+
+func (a *CoinsAmount) ToAtoms() int64 {
+	return a.AtomsValue
 }
 
 func (a *CoinsAmount) Copy() CoinsAmount {
