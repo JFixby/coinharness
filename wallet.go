@@ -230,7 +230,7 @@ func fundTx(
 		// Add the selected output to the transaction, updating the
 		// current tx size while accounting for the size of the future
 		// sigScript.
-		txIn := &InputTx{
+		txIn := &TxIn{
 			PreviousOutPoint: OutPoint{
 				Tree: output.Tree,
 			},

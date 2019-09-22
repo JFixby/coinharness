@@ -21,7 +21,7 @@ type Address interface {
 
 type Seed interface{}
 
-type InputTx struct {
+type TxIn struct {
 	PreviousOutPoint OutPoint
 	Amount           CoinsAmount
 }
@@ -62,7 +62,7 @@ func (a *CoinsAmount) Copy() CoinsAmount {
 
 type MessageTx struct {
 	Version  int32
-	TxIn     []*InputTx
+	TxIn     []*TxIn
 	TxOut    []*TxOut
 	LockTime uint32
 	TxHash   Hash

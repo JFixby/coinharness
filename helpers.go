@@ -212,13 +212,13 @@ func AssertTxMined(t *testing.T, r *Harness, txid Hash, blockHash Hash) {
 		t.Fatalf("unable to get block: %v", err)
 	}
 
-	numBlockTxns := len(block.Transactions())
+	numBlockTxns := len(block.Transactions)
 	if numBlockTxns < 2 {
 		t.Fatalf("crafted transaction wasn't mined, block should have "+
 			"at least %v transactions instead has %v", 2, numBlockTxns)
 	}
 
-	txHash1 := block.Transactions()[1].TxHash
+	txHash1 := block.Transactions[1].TxHash
 
 	if txHash1 != txid {
 		t.Fatalf("txid's don't match, %v vs %v", txHash1, txid)
