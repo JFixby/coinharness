@@ -1,5 +1,7 @@
 package coinharness
 
+import "fmt"
+
 type Network interface {
 	CoinbaseMaturity() int64
 	Params() interface{}
@@ -42,6 +44,10 @@ type TxOut struct {
 
 type CoinsAmount struct {
 	AtomsValue int64
+}
+
+func (a CoinsAmount) String() string {
+	return fmt.Sprintf("%v coins", a.ToCoins())
 }
 
 func CoinsAmountFromFloat(coinsFloat float64) CoinsAmount {
