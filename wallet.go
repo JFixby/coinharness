@@ -140,8 +140,8 @@ type CreateTransactionArgs struct {
 	FeeRate         CoinsAmount
 	Change          bool
 	TxVersion       int32
-	PayToAddrScript func(Address) ([]byte, error) //txscript.PayToAddrScript(addr)
-	TxSerializeSize func(*MessageTx) int
+	PayToAddrScript func(Address) ([]byte, error) // txscript.PayToAddrScript(addr)
+	TxSerializeSize func(*MessageTx) int          // *wire.MsgTx.TxSerializeSize()
 	Account         string
 }
 
