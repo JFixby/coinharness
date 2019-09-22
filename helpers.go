@@ -169,13 +169,15 @@ func GenerateTestChain(numToGenerate int64, node RPCClient) error {
 func GenSpend(
 	t *testing.T,
 	r *Harness,
+	account string,
 	amt CoinsAmount,
 	PkScriptVersion uint16,
 	PayToAddrScript func(Address) ([]byte, error),
 	TxSerializeSize func(*MessageTx) int,
 ) Hash {
+	pin.AssertNotEmpty("account", account)
 	// Grab a fresh address from the wallet.
-	addr, err := r.Wallet.NewAddress(DefaultAccountName)
+	addr, err := r.Wallet.NewAddress(account)
 	if err != nil {
 		t.Fatalf("unable to get new address: %v", err)
 	}
@@ -197,6 +199,7 @@ func GenSpend(
 		FeeRate:         CoinsAmountFromFloat(10),
 		PayToAddrScript: PayToAddrScript,
 		TxSerializeSize: TxSerializeSize,
+		Account:         account,
 	}
 
 	txid, err := CreateTransaction(r.Wallet, arg)
