@@ -224,9 +224,9 @@ func (wallet *ConsoleWallet) Dispose() error {
 
 func (wallet *ConsoleWallet) NewAddress(accountName string) (Address, error) {
 	return wallet. //
-		RPCClient(). //
-		Connection(). //
-		GetNewAddress(accountName)
+			RPCClient().  //
+			Connection(). //
+			GetNewAddress(accountName)
 }
 
 func (wallet *ConsoleWallet) Sync(desiredHeight int64) int64 {

@@ -65,8 +65,8 @@ type WalletInfoResult struct {
 }
 
 type GetBalanceResult struct {
-	Balances                     map[string]GetAccountBalanceResult
-	BlockHash                    Hash
+	Balances  map[string]GetAccountBalanceResult
+	BlockHash Hash
 }
 
 // GetAccountBalanceResult models the account data from the getbalance command.
