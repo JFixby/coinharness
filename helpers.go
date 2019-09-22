@@ -165,3 +165,62 @@ func GenerateTestChain(numToGenerate int64, node RPCClient) error {
 	fmt.Println("Block generation complete.")
 	return nil
 }
+
+func GenSpend(
+	t *testing.T,
+	r *Harness,
+	amt CoinsAmount,
+	PkScriptVersion uint16,
+	PayToAddrScript func(Address) ([]byte, error),
+	TxSerializeSize func(*MessageTx) int,
+) Hash {
+	// Grab a fresh address from the wallet.
+	addr, err := r.Wallet.NewAddress(&NewAddressArgs{"default"})
+	if err != nil {
+		t.Fatalf("unable to get new address: %v", err)
+	}
+
+	// Next, send amt to this address, spending from one of our
+	// mature coinbase outputs.
+	addrScript, err := PayToAddrScript(addr)
+	if err != nil {
+		t.Fatalf("unable to generate pkscript to addr: %v", err)
+	}
+
+	output := &TxOut{
+		Amount:   amt,
+		PkScript: addrScript,
+		Version:  PkScriptVersion, //wire.DefaultPkScriptVersion
+	}
+	arg := &CreateTransactionArgs{
+		Outputs:         []*TxOut{output},
+		FeeRate:         CoinsAmountFromFloat(10),
+		PayToAddrScript: PayToAddrScript,
+		TxSerializeSize: TxSerializeSize,
+	}
+
+	txid, err := CreateTransaction(r.Wallet, arg)
+	if err != nil {
+		t.Fatalf("coinbase spend failed: %v", err)
+	}
+	return txid.TxHash
+}
+
+func AssertTxMined(t *testing.T, r *Harness, txid Hash, blockHash Hash) {
+	block, err := r.NodeRPCClient().GetBlock(blockHash)
+	if err != nil {
+		t.Fatalf("unable to get block: %v", err)
+	}
+
+	numBlockTxns := len(block.Transactions())
+	if numBlockTxns < 2 {
+		t.Fatalf("crafted transaction wasn't mined, block should have "+
+			"at least %v transactions instead has %v", 2, numBlockTxns)
+	}
+
+	txHash1 := block.Transactions()[1].TxHash
+
+	if txHash1 != txid {
+		t.Fatalf("txid's don't match, %v vs %v", txHash1, txid)
+	}
+}
