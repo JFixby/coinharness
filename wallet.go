@@ -130,7 +130,7 @@ type TestWalletConfig struct {
 }
 
 type SendOutputsArgs struct {
-	Outputs []TxOut
+	Outputs []*TxOut
 	FeeRate CoinsAmount
 }
 

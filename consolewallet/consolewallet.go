@@ -289,6 +289,10 @@ func (wallet *ConsoleWallet) WalletLock() error {
 	return wallet.rPCClient.Connection().WalletLock()
 }
 
+func (wallet *ConsoleWallet) ListUnspent() ([]*coinharness.Unspent, error) {
+	return wallet.rPCClient.Connection().ListUnspent()
+}
+
 func (wallet *ConsoleWallet) WalletInfo() (*coinharness.WalletInfoResult, error) {
 	return wallet.rPCClient.Connection().WalletInfo()
 }

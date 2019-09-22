@@ -68,10 +68,10 @@ type MessageTx struct {
 }
 
 type Tx struct {
-	Hash    Hash // Cached transaction hash
-	MsgTx   *MessageTx    // Underlying MsgTx
-	TxTree  int8           // Indicates which tx tree the tx is found in
-	TxIndex int            // Position within a block or TxIndexUnknown
+	Hash    Hash       // Cached transaction hash
+	MsgTx   *MessageTx // Underlying MsgTx
+	TxTree  int8       // Indicates which tx tree the tx is found in
+	TxIndex int        // Position within a block or TxIndexUnknown
 }
 
 type AddNodeArguments struct {
