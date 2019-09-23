@@ -25,7 +25,15 @@ type Seed interface{}
 
 type TxIn struct {
 	PreviousOutPoint OutPoint
-	Amount           CoinsAmount
+	ValueIn          CoinsAmount
+
+	// Non-witness
+	Sequence uint32
+
+	// Witness
+	BlockHeight     uint32
+	BlockIndex      uint32
+	SignatureScript []byte
 }
 
 type OutPoint struct {
@@ -39,7 +47,7 @@ type Hash interface{}
 type TxOut struct {
 	Version  uint16
 	PkScript []byte
-	Amount   CoinsAmount
+	Value    CoinsAmount
 }
 
 type CoinsAmount struct {
@@ -67,11 +75,14 @@ func (a *CoinsAmount) Copy() CoinsAmount {
 }
 
 type MessageTx struct {
-	Version  int32
-	TxIn     []*TxIn
-	TxOut    []*TxOut
-	LockTime uint32
-	TxHash   Hash
+	//CachedHash Hash
+	SerType    uint16
+	Version    int32
+	TxIn       []*TxIn
+	TxOut      []*TxOut
+	LockTime   uint32
+	Expiry     uint32
+	TxHash     func() Hash
 }
 
 type Tx struct {

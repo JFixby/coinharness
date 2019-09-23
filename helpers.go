@@ -190,7 +190,7 @@ func GenSpend(
 	}
 
 	output := &TxOut{
-		Amount:   amt,
+		Value:    amt,
 		PkScript: addrScript,
 		Version:  PkScriptVersion, //wire.DefaultPkScriptVersion
 	}
@@ -221,7 +221,7 @@ func AssertTxMined(t *testing.T, r *Harness, txid Hash, blockHash Hash) {
 			"at least %v transactions instead has %v", 2, numBlockTxns)
 	}
 
-	txHash1 := block.Transactions[1].TxHash
+	txHash1 := block.Transactions[1].TxHash()
 
 	if txHash1 != txid {
 		t.Fatalf("txid's don't match, %v vs %v", txHash1, txid)

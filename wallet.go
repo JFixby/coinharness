@@ -48,6 +48,8 @@ type Wallet interface {
 
 	WalletInfo() (*WalletInfoResult, error)
 	ListAccounts() (map[string]CoinsAmount, error)
+
+	SendFrom(account string, address Address, amount CoinsAmount) (error)
 }
 
 const DefaultAccountName = "default"
@@ -157,7 +159,7 @@ func CreateTransaction(wallet Wallet, args *CreateTransactionArgs) (*MessageTx, 
 	// selection shortly below.
 	outputAmt := CoinsAmount{0}
 	for _, output := range args.Outputs {
-		outputAmt.AtomsValue += output.Amount.AtomsValue
+		outputAmt.AtomsValue += output.Value.AtomsValue
 		tx.TxOut = append(tx.TxOut, output)
 	}
 
@@ -225,7 +227,7 @@ func fundTx(
 			PreviousOutPoint: OutPoint{
 				Tree: output.Tree,
 			},
-			Amount: output.Amount.Copy(),
+			ValueIn: output.Amount.Copy(),
 		}
 		tx.TxIn = append(tx.TxIn, txIn)
 
@@ -254,7 +256,7 @@ func fundTx(
 				return err
 			}
 			changeOutput := &TxOut{
-				Amount:   changeVal,
+				Value:    changeVal,
 				PkScript: pkScript,
 			}
 			tx.TxOut = append(tx.TxOut, changeOutput)
