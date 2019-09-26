@@ -110,7 +110,6 @@ type BlockHeader interface {
 }
 
 type PublicKey interface {
-	SerializeCompressed() []byte
 }
 
 type PrivateKey interface {
