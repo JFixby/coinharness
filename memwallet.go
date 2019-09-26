@@ -295,7 +295,7 @@ func (wallet *InMemoryWallet) chainSyncer() {
 		for _, tx := range update.filteredTxns {
 			mtx := tx.MsgTx
 			isCoinbase := wallet.IsCoinBaseTx(mtx)
-			txHash := mtx.TxHash
+			txHash := mtx.TxHash()
 			wallet.evalOutputs(mtx.TxOut, txHash, isCoinbase, undo)
 			wallet.evalInputs(mtx.TxIn, undo)
 		}
