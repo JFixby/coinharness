@@ -112,7 +112,7 @@ func (testSetup *ChainWithMatureOutputsSpawner) NewInstance(harnessName string) 
 
 	pin.AssertTrue(
 		fmt.Sprintf(
-			"Wallet net<%v> is the same as Node net<%v>", walletNet, nodeNet),
+			"Wallet Net<%v> is the same as Node Net<%v>", walletNet, nodeNet),
 		walletNet == nodeNet)
 
 	DeploySimpleChain(testSetup, harness)

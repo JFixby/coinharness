@@ -49,7 +49,7 @@ type Wallet interface {
 	WalletInfo() (*WalletInfoResult, error)
 	ListAccounts() (map[string]CoinsAmount, error)
 
-	SendFrom(account string, address Address, amount CoinsAmount) (error)
+	SendFrom(account string, address Address, amount CoinsAmount) error
 }
 
 const DefaultAccountName = "default"
@@ -120,9 +120,9 @@ type TestWalletConfig struct {
 	WalletUser     string
 	WalletPassword string
 
-	PrivateKeyKeyToAddr  func(key PrivateKey, net Network) (Address, error)
-	NewMasterKeyFromSeed func(seed Seed, params Network) (ExtendedKey, error)
-	RPCClientFactory     RPCClientFactory
+	//PrivateKeyKeyToAddr  func(key PrivateKey, Net Network) (Address, error)
+	//NewMasterKeyFromSeed func(seed Seed, params Network) (ExtendedKey, error)
+	//RPCClientFactory     RPCClientFactory
 }
 
 // CreateTransactionArgs bundles CreateTransaction() arguments to minimize diff
@@ -167,7 +167,7 @@ func CreateTransaction(wallet Wallet, args *CreateTransactionArgs) (*MessageTx, 
 		tx.TxOut = append(tx.TxOut, output)
 	}
 
-	// Attempt to fund the transaction with spendable utxos.
+	// Attempt to fund the transaction with spendable Utxos.
 	if err := fundTx(
 		wallet,
 		args.Account,

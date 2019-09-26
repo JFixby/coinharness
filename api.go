@@ -77,13 +77,13 @@ func (a *CoinsAmount) Copy() CoinsAmount {
 
 type MessageTx struct {
 	//CachedHash Hash
-	SerType    uint16
-	Version    int32
-	TxIn       []*TxIn
-	TxOut      []*TxOut
-	LockTime   uint32
-	Expiry     uint32
-	TxHash     func() Hash
+	SerType  uint16
+	Version  int32
+	TxIn     []*TxIn
+	TxOut    []*TxOut
+	LockTime uint32
+	Expiry   uint32
+	TxHash   func() Hash
 }
 
 type Tx struct {
@@ -98,14 +98,10 @@ type AddNodeArguments struct {
 	Command    interface{}
 }
 
-
 type CoinbaseKey interface{}
 
 type ExtendedKey interface {
-	Child(u uint32) (ChildKey, error)
-}
-
-type ChildKey interface {
+	Child(u uint32) (ExtendedKey, error)
 	PrivateKey() (PrivateKey, error)
 }
 
@@ -113,4 +109,8 @@ type BlockHeader interface {
 	Height() int64
 }
 
-type PrivateKey interface{}
+type PublicKey interface{}
+
+type PrivateKey interface {
+	PublicKey() PublicKey
+}
