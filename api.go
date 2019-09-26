@@ -109,7 +109,9 @@ type BlockHeader interface {
 	Height() int64
 }
 
-type PublicKey interface{}
+type PublicKey interface {
+	SerializeCompressed() []byte
+}
 
 type PrivateKey interface {
 	PublicKey() PublicKey
