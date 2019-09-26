@@ -213,12 +213,12 @@ type NotificationHandlers struct {
 	// made to register for the notification and the function is non-nil.
 	//OnTxAcceptedVerbose func(txDetails *dcrjson.TxRawResult)
 
-	// OnDcrdConnected is invoked when a wallet connects or disconnects from
-	// dcrd.
+	// OnNodeConnected is invoked when a wallet connects or disconnects from
+	// node.
 	//
 	// This will only be available when client is connected to a wallet
 	// server such as dcrwallet.
-	OnDcrdConnected func(connected bool)
+	OnNodeConnected func(connected bool)
 
 	// OnAccountBalance is invoked with account balance updates.
 	//

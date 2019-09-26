@@ -151,7 +151,7 @@ func (wallet *InMemoryWallet) Start(args *TestWalletStartArgs) error {
 	// wallet.
 	wallet.updateTxFilter()
 
-	// Ensure dcrd properly dispatches our registered call-back for each new
+	// Ensure node properly dispatches our registered call-back for each new
 	// block. Otherwise, the InMemoryWallet won't function properly.
 	err := wallet.nodeRPC.NotifyBlocks()
 	pin.CheckTestSetupMalfunction(err)

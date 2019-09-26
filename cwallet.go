@@ -59,10 +59,10 @@ func NewConsoleWallet(args *NewConsoleWalletArgs) *ConsoleWallet {
 	return Wallet
 }
 
-// ConsoleWallet launches a new dcrd instance using command-line call.
+// ConsoleWallet launches a new node instance using command-line call.
 // Implements harness.Testwallet.
 type ConsoleWallet struct {
-	// WalletExecutablePathProvider returns path to the dcrd executable
+	// WalletExecutablePathProvider returns path to the node executable
 	WalletExecutablePathProvider commandline.ExecutablePathProvider
 
 	NodeRpcUser string
@@ -139,12 +139,12 @@ func (wallet *ConsoleWallet) Network() Network {
 	return wallet.network
 }
 
-// IsRunning returns true if ConsoleWallet is running external dcrd process
+// IsRunning returns true if ConsoleWallet is running external node process
 func (wallet *ConsoleWallet) IsRunning() bool {
 	return wallet.externalProcess.IsRunning()
 }
 
-// Start Wallet process. Deploys working dir, launches dcrd using command-line,
+// Start Wallet process. Deploys working dir, launches node using command-line,
 // connects RPC client to the wallet.
 func (wallet *ConsoleWallet) Start(args *TestWalletStartArgs) error {
 	if wallet.IsRunning() {
@@ -192,8 +192,8 @@ type ConsoleCommandWalletCook interface {
 }
 
 // Stop interrupts the running Wallet process.
-// Disconnects RPC client from the Wallet, removes cert-files produced by the dcrd,
-// stops dcrd process.
+// Disconnects RPC client from the Wallet, removes cert-files produced by the node,
+// stops node process.
 func (wallet *ConsoleWallet) Stop() {
 	if !wallet.IsRunning() {
 		pin.ReportTestSetupMalfunction(fmt.Errorf("Wallet is not running"))

@@ -43,10 +43,10 @@ func NewConsoleNode(args *NewConsoleNodeArgs) *ConsoleNode {
 	return node
 }
 
-// ConsoleNode launches a new dcrd instance using command-line call.
+// ConsoleNode launches a new node instance using command-line call.
 // Implements harness.TestNode.
 type ConsoleNode struct {
-	// NodeExecutablePathProvider returns path to the dcrd executable
+	// NodeExecutablePathProvider returns path to the node executable
 	NodeExecutablePathProvider commandline.ExecutablePathProvider
 
 	rpcUser    string
@@ -130,12 +130,12 @@ func (node *ConsoleNode) Network() Network {
 	return node.network
 }
 
-// IsRunning returns true if ConsoleNode is running external dcrd process
+// IsRunning returns true if ConsoleNode is running external node process
 func (node *ConsoleNode) IsRunning() bool {
 	return node.externalProcess.IsRunning()
 }
 
-// Start node process. Deploys working dir, launches dcrd using command-line,
+// Start node process. Deploys working dir, launches node using command-line,
 // connects RPC client to the node.
 func (node *ConsoleNode) Start(args *StartNodeArgs) {
 	if node.IsRunning() {
@@ -177,8 +177,8 @@ func (node *ConsoleNode) Start(args *StartNodeArgs) {
 }
 
 // Stop interrupts the running node process.
-// Disconnects RPC client from the node, removes cert-files produced by the dcrd,
-// stops dcrd process.
+// Disconnects RPC client from the node, removes cert-files produced by the node,
+// stops node process.
 func (node *ConsoleNode) Stop() {
 	if !node.IsRunning() {
 		pin.ReportTestSetupMalfunction(fmt.Errorf("node is not running"))

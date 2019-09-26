@@ -38,10 +38,10 @@ type ChainWithMatureOutputsSpawner struct {
 }
 
 // NewInstance does the following:
-//   1. Starts a new DcrdTestServer process with a fresh SimNet chain.
-//   2. Creates a new temporary WalletTestServer connected to the running DcrdTestServer.
+//   1. Starts a new NodeTestServer process with a fresh SimNet chain.
+//   2. Creates a new temporary WalletTestServer connected to the running NodeTestServer.
 //   3. Gets a new address from the WalletTestServer for mining subsidy.
-//   4. Restarts the DcrdTestServer with the new mining address.
+//   4. Restarts the NodeTestServer with the new mining address.
 //   5. Generates a number of blocks so that testing starts with a spendable
 //      balance.
 func (testSetup *ChainWithMatureOutputsSpawner) NewInstance(harnessName string) pin.Spawnable {
