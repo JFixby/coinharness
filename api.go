@@ -19,6 +19,7 @@ type Address interface {
 	String() string
 	IsForNet(network Network) bool
 	Internal() interface{}
+	ScriptAddress() []byte
 }
 
 type Seed interface{}
@@ -96,3 +97,20 @@ type AddNodeArguments struct {
 	TargetAddr string
 	Command    interface{}
 }
+
+
+type CoinbaseKey interface{}
+
+type ExtendedKey interface {
+	Child(u uint32) (ChildKey, error)
+}
+
+type ChildKey interface {
+	PrivateKey() (PrivateKey, error)
+}
+
+type BlockHeader interface {
+	Height() int64
+}
+
+type PrivateKey interface{}

@@ -119,6 +119,10 @@ type TestWalletConfig struct {
 	NodePassword   string
 	WalletUser     string
 	WalletPassword string
+
+	PrivateKeyKeyToAddr  func(key PrivateKey, net Network) (Address, error)
+	NewMasterKeyFromSeed func(seed Seed, params Network) (ExtendedKey, error)
+	RPCClientFactory     RPCClientFactory
 }
 
 // CreateTransactionArgs bundles CreateTransaction() arguments to minimize diff
