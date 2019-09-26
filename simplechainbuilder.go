@@ -132,10 +132,10 @@ func shutdownHarnessSequence(harness *Harness) {
 	harness.Node.Stop()
 }
 
-// extractSeedSaltFromHarnessName tries to split harness name string
+// ExtractSeedSaltFromHarnessName tries to split harness name string
 // at `.`-character and parse the second part as a uint32 number.
 // Otherwise returns default value.
-func extractSeedSaltFromHarnessName(harnessName string) uint32 {
+func ExtractSeedSaltFromHarnessName(harnessName string) uint32 {
 	parts := strings.Split(harnessName, ".")
 	if len(parts) != 2 {
 		// no salt specified, return default value

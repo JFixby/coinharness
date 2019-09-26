@@ -53,7 +53,7 @@ func (testSetup *ChainWithMatureOutputsSpawner) NewInstance(harnessName string) 
 	// This allows to specify custom walled seed salt by adding the dot
 	// in the harness name.
 	// Example: "harness.65" will create harness wallet seed equal to the 65
-	seedSalt := extractSeedSaltFromHarnessName(harnessName)
+	seedSalt := ExtractSeedSaltFromHarnessName(harnessName)
 
 	harnessFolder := filepath.Join(testSetup.WorkingDir, harnessFolderName)
 	walletFolder := filepath.Join(harnessFolder, "wallet")
