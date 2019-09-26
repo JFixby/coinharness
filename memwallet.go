@@ -482,6 +482,7 @@ func (wallet *InMemoryWallet) GetBalance() (*GetBalanceResult, error) {
 	wallet.RLock()
 	defer wallet.RUnlock()
 	result := &GetBalanceResult{}
+	result.Balances = make(map[string]GetAccountBalanceResult)
 	//result.BlockHash
 	b := GetAccountBalanceResult{}
 	result.Balances[DefaultAccountName] = b
