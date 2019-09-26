@@ -58,8 +58,6 @@ type InMemoryWallet struct {
 	ReadBlockHeader     func(header []byte) BlockHeader
 }
 
-
-
 const chainUpdateSignal = "chainUpdateSignal"
 const stopSignal = "stopSignal"
 
