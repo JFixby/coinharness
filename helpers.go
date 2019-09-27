@@ -2,7 +2,7 @@ package coinharness
 
 import (
 	"fmt"
-	"github.com/jfixby/coinamount"
+	"github.com/jfixby/coin"
 	"github.com/jfixby/pin"
 	"reflect"
 	"testing"
@@ -171,7 +171,7 @@ func GenSpend(
 	t *testing.T,
 	r *Harness,
 	account string,
-	amt coinamount.CoinsAmount,
+	amt coin.Amount,
 	PkScriptVersion uint16,
 	PayToAddrScript func(Address) ([]byte, error),
 	TxSerializeSize func(*MessageTx) int,
@@ -197,7 +197,7 @@ func GenSpend(
 	}
 	arg := &CreateTransactionArgs{
 		Outputs:         []*TxOut{output},
-		FeeRate:         coinamount.CoinsAmountFromFloat(10),
+		FeeRate:         coin.FromFloat(10),
 		PayToAddrScript: PayToAddrScript,
 		TxSerializeSize: TxSerializeSize,
 		Account:         account,

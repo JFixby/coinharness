@@ -1,7 +1,7 @@
 package coinharness
 
 import (
-	"github.com/jfixby/coinamount"
+	"github.com/jfixby/coin"
 )
 
 type Network interface {
@@ -28,7 +28,7 @@ type Seed interface{}
 
 type TxIn struct {
 	PreviousOutPoint OutPoint
-	ValueIn          coinamount.CoinsAmount
+	ValueIn          coin.Amount
 
 	// Non-witness
 	Sequence uint32
@@ -50,7 +50,7 @@ type Hash interface{}
 type TxOut struct {
 	Version  uint16
 	PkScript []byte
-	Value    coinamount.CoinsAmount
+	Value    coin.Amount
 }
 
 type MessageTx struct {

@@ -2,7 +2,7 @@ package coinharness
 
 import (
 	"fmt"
-	"github.com/jfixby/coinamount"
+	"github.com/jfixby/coin"
 	"github.com/jfixby/pin"
 	"github.com/jfixby/pin/commandline"
 	"net"
@@ -269,7 +269,7 @@ func (wallet *ConsoleWallet) GetBalance() (*GetBalanceResult, error) {
 	return wallet.rPCClient.Connection().GetBalance()
 }
 
-func (wallet *ConsoleWallet) SendFrom(account string, address Address, amount coinamount.CoinsAmount) error {
+func (wallet *ConsoleWallet) SendFrom(account string, address Address, amount coin.Amount) error {
 	panic("")
 	//return wallet.rPCClient.Connection().SendRawTransaction()
 }
@@ -290,6 +290,6 @@ func (wallet *ConsoleWallet) WalletInfo() (*WalletInfoResult, error) {
 	return wallet.rPCClient.Connection().WalletInfo()
 }
 
-func (wallet *ConsoleWallet) ListAccounts() (map[string]coinamount.CoinsAmount, error) {
+func (wallet *ConsoleWallet) ListAccounts() (map[string]coin.Amount, error) {
 	return wallet.rPCClient.Connection().ListAccounts()
 }
