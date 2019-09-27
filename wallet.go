@@ -2,6 +2,7 @@ package coinharness
 
 import (
 	"fmt"
+	"github.com/jfixby/coinamount"
 	"github.com/jfixby/pin"
 )
 
@@ -47,9 +48,9 @@ type Wallet interface {
 	WalletLock() error
 
 	WalletInfo() (*WalletInfoResult, error)
-	ListAccounts() (map[string]CoinsAmount, error)
+	ListAccounts() (map[string]coinamount.CoinsAmount, error)
 
-	SendFrom(account string, address Address, amount CoinsAmount) error
+	SendFrom(account string, address Address, amount coinamount.CoinsAmount) error
 }
 
 const DefaultAccountName = "default"
@@ -74,13 +75,13 @@ type GetBalanceResult struct {
 // GetAccountBalanceResult models the account data from the getbalance command.
 type GetAccountBalanceResult struct {
 	AccountName             string
-	ImmatureCoinbaseRewards CoinsAmount
-	ImmatureStakeGeneration CoinsAmount
-	LockedByTickets         CoinsAmount
-	Spendable               CoinsAmount
-	Total                   CoinsAmount
-	Unconfirmed             CoinsAmount
-	VotingAuthority         CoinsAmount
+	ImmatureCoinbaseRewards coinamount.CoinsAmount
+	ImmatureStakeGeneration coinamount.CoinsAmount
+	LockedByTickets         coinamount.CoinsAmount
+	Spendable               coinamount.CoinsAmount
+	Total                   coinamount.CoinsAmount
+	Unconfirmed             coinamount.CoinsAmount
+	VotingAuthority         coinamount.CoinsAmount
 }
 
 type ValidateAddressResult struct {
@@ -129,7 +130,7 @@ type TestWalletConfig struct {
 // in case a new argument for the function is added
 type CreateTransactionArgs struct {
 	Outputs         []*TxOut
-	FeeRate         CoinsAmount
+	FeeRate         coinamount.CoinsAmount
 	Change          bool
 	TxVersion       int32
 	PayToAddrScript func(Address) ([]byte, error) // txscript.PayToAddrScript(addr)
@@ -161,7 +162,7 @@ func CreateTransaction(wallet Wallet, args *CreateTransactionArgs) (*MessageTx, 
 
 	// Tally up the total amount to be sent in order to perform coin
 	// selection shortly below.
-	outputAmt := CoinsAmount{0}
+	outputAmt := coinamount.CoinsAmount{0}
 	for _, output := range args.Outputs {
 		outputAmt.AtomsValue += output.Value.AtomsValue
 		tx.TxOut = append(tx.TxOut, output)
@@ -195,8 +196,8 @@ func fundTx(
 	account string,
 	unspent []*Unspent,
 	tx *MessageTx,
-	amt CoinsAmount,
-	feeRate CoinsAmount,
+	amt coinamount.CoinsAmount,
+	feeRate coinamount.CoinsAmount,
 	PayToAddrScript func(Address) ([]byte, error),
 	TxSerializeSize func(*MessageTx) int,
 ) error {
@@ -210,7 +211,7 @@ func fundTx(
 	pin.AssertNotNil("TxSerializeSize", TxSerializeSize)
 	pin.AssertNotEmpty("account", account)
 
-	amtSelected := CoinsAmount{0}
+	amtSelected := coinamount.CoinsAmount{0}
 	//txSize := int64(0)
 	for _, output := range unspent {
 		// Skip any outputs that are still currently immature or are
@@ -241,7 +242,7 @@ func fundTx(
 		// observing the specified fee rate. If we don't have enough
 		// coins from he current amount selected to pay the fee, then
 		// continue to grab more coins.
-		reqFee := CoinsAmount{int64(txSize) * feeRate.AtomsValue}
+		reqFee := coinamount.CoinsAmount{int64(txSize) * feeRate.AtomsValue}
 		collected := amtSelected.AtomsValue - reqFee.AtomsValue
 		if collected < amt.AtomsValue {
 			continue
@@ -249,7 +250,7 @@ func fundTx(
 
 		// If we have any change left over, then add an additional
 		// output to the transaction reserved for change.
-		changeVal := CoinsAmount{amtSelected.AtomsValue - amt.AtomsValue - reqFee.AtomsValue}
+		changeVal := coinamount.CoinsAmount{amtSelected.AtomsValue - amt.AtomsValue - reqFee.AtomsValue}
 		if changeVal.AtomsValue > 0 {
 			addr, err := wallet.GetNewAddress(account)
 			if err != nil {

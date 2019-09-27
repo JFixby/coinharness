@@ -3,6 +3,7 @@ package coinharness
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/jfixby/coinamount"
 	"github.com/jfixby/pin"
 	"math"
 	"time"
@@ -37,7 +38,7 @@ type RPCClient interface {
 	GetBlock(hash Hash) (*MsgBlock, error)
 	SubmitBlock(block Block) error
 	LoadTxFilter(b bool, addresses []Address) error
-	ListAccounts() (map[string]CoinsAmount, error)
+	ListAccounts() (map[string]coinamount.CoinsAmount, error)
 }
 
 // Unspent models a successful response from the listunspent request.
@@ -50,7 +51,7 @@ type Unspent struct {
 	Account       string
 	ScriptPubKey  string
 	RedeemScript  string
-	Amount        CoinsAmount
+	Amount        coinamount.CoinsAmount
 	Confirmations int64
 	Spendable     bool
 }
@@ -205,7 +206,7 @@ type NotificationHandlers struct {
 	// memory pool.  It will only be invoked if a preceding call to
 	// NotifyNewTransactions with the verbose flag set to false has been
 	// made to register for the notification and the function is non-nil.
-	OnTxAccepted func(hash Hash, amount CoinsAmount)
+	OnTxAccepted func(hash Hash, amount coinamount.CoinsAmount)
 
 	// OnTxAccepted is invoked when a transaction is accepted into the
 	// memory pool.  It will only be invoked if a preceding call to
@@ -224,7 +225,7 @@ type NotificationHandlers struct {
 	//
 	// This will only be available when speaking to a wallet server
 	// such as dcrwallet.
-	OnAccountBalance func(account string, balance CoinsAmount, confirmed bool)
+	OnAccountBalance func(account string, balance coinamount.CoinsAmount, confirmed bool)
 
 	// OnWalletLockState is invoked when a wallet is locked or unlocked.
 	//
@@ -236,7 +237,7 @@ type NotificationHandlers struct {
 	//
 	// This will only be available when client is connected to a wallet
 	// server such as dcrwallet.
-	OnTicketsPurchased func(TxHash Hash, amount CoinsAmount)
+	OnTicketsPurchased func(TxHash Hash, amount coinamount.CoinsAmount)
 
 	// OnVotesCreated is invoked when a wallet generates an SSGen.
 	//

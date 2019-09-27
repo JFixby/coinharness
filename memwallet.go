@@ -2,6 +2,7 @@ package coinharness
 
 import (
 	"bytes"
+	"github.com/jfixby/coinamount"
 	"github.com/jfixby/pin"
 	"sync"
 	"time"
@@ -82,7 +83,7 @@ type UndoEntry struct {
 // maturity period of direct coinbase outputs.
 type Utxo struct {
 	pkScript       []byte
-	value          CoinsAmount
+	value          coinamount.CoinsAmount
 	maturityHeight int64
 	keyIndex       uint32
 	isLocked       bool
@@ -93,21 +94,21 @@ type Utxo struct {
 func (u *Utxo) isMature(height int64) bool {
 	return height >= u.maturityHeight
 }
-func (wallet *InMemoryWallet) ListAccounts() (map[string]CoinsAmount, error) {
+func (wallet *InMemoryWallet) ListAccounts() (map[string]coinamount.CoinsAmount, error) {
 
 	l, err := wallet.GetBalance()
 	if err != nil {
 		return nil, err
 	}
 
-	r := make(map[string]CoinsAmount)
+	r := make(map[string]coinamount.CoinsAmount)
 	for k, v := range l.Balances {
 		r[k] = v.Spendable.Copy()
 	}
 	return r, nil
 }
 
-func (wallet *InMemoryWallet) SendFrom(account string, address Address, amount CoinsAmount) error {
+func (wallet *InMemoryWallet) SendFrom(account string, address Address, amount coinamount.CoinsAmount) error {
 	panic("implement me")
 }
 
@@ -487,7 +488,7 @@ func (wallet *InMemoryWallet) GetBalance() (*GetBalanceResult, error) {
 	b := GetAccountBalanceResult{}
 	result.Balances[DefaultAccountName] = b
 
-	balance := CoinsAmount{0}
+	balance := coinamount.CoinsAmount{0}
 	for _, utxo := range wallet.Utxos {
 		// Prevent any immature or locked outputs from contributing to
 		// the wallet's total confirmed balance.
