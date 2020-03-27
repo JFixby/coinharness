@@ -31,6 +31,15 @@ systems/integration tests.
  - [Bitcoin regressions testing](https://github.com/JFixby/btcregtest)
  
  - [PicFight coin regressions testing](https://github.com/picfight/pfcregtest)
+
+## Build 
+
+```
+set GO111MODULE=on
+go build ./...
+go clean -testcache
+go test ./...
+ ```
  
 ## License
 
